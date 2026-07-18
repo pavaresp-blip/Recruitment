@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบรับสมัครงาน + แบบทดสอบบุคลิกภาพ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6fb; --card:#ffffff; --ink:#1a2233; --muted:#6b7488;
+  --line:#e6e9f2; --brand:#3b6cff; --brand-ink:#2450e6;
+  --bull:#ef4444; --eagle:#f59e0b; --bear:#8b5cf6; --mouse:#10b981;
+  --ok:#10b981; --warn:#f59e0b; --shadow:0 10px 30px rgba(24,39,75,.08);
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans Thai',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+.wrap{max-width:900px;margin:0 auto;padding:20px 18px 80px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(244,246,251,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:900px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.logo .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--brand),#7c3aed);display:grid;place-items:center;color:#fff;font-size:15px}
+.hrlink{font-size:13px;color:var(--muted);cursor:pointer;padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--card)}
+.hrlink:hover{color:var(--brand)}
+
+h1{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.sub{color:var(--muted);font-size:15px;margin-bottom:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+.grid{display:grid;gap:14px}
+.hidden{display:none!important}
+
+/* company cards */
+.companies{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:8px}
+.co{cursor:pointer;border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--card);transition:.18s;position:relative;overflow:hidden}
+.co:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--brand)}
+.co .badge{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px;margin-bottom:12px}
+.co h3{font-size:17px;font-weight:700}
+.co p{color:var(--muted);font-size:13px;margin-top:2px}
+.co .go{position:absolute;right:16px;bottom:16px;color:var(--muted)}
+
+/* position list */
+.pos{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--card);cursor:pointer;transition:.15s;margin-bottom:12px}
+.pos:hover{border-color:var(--brand);box-shadow:var(--shadow)}
+.pos h3{font-size:16px}
+.pos .meta{color:var(--muted);font-size:13px;margin-top:2px}
+.tag{display:inline-block;font-size:12px;padding:3px 9px;border-radius:20px;background:#eef2ff;color:var(--brand-ink);font-weight:600;margin-right:6px}
+
+/* forms */
+label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.req::after{content:" *";color:var(--bull)}
+input,select,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:15px;background:#fbfcfe;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff}
+textarea{resize:vertical;min-height:90px}
+.field{margin-bottom:16px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.hint{font-size:12px;color:var(--muted);margin-top:4px}
+.skill-row{display:grid;grid-template-columns:1fr 160px;gap:10px;align-items:center;margin-bottom:10px}
+.skill-row .rng{display:flex;align-items:center;gap:8px}
+.skill-row output{font-weight:700;min-width:26px;text-align:right;color:var(--brand)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:12px;border:none;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:.15s}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-ink)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.block{width:100%}
+.actions{display:flex;gap:12px;margin-top:24px}
+.back{background:none;border:none;color:var(--muted);cursor:pointer;font-family:inherit;font-size:14px;padding:8px 0;margin-bottom:14px;display:inline-flex;align-items:center;gap:6px}
+.back:hover{color:var(--brand)}
+
+/* progress */
+.progress{margin-bottom:22px}
+.progress .bar{height:8px;background:var(--line);border-radius:20px;overflow:hidden}
+.progress .fill{height:100%;background:linear-gradient(90deg,var(--brand),#7c3aed);border-radius:20px;transition:.3s}
+.progress .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+
+/* quiz */
+.q{margin-bottom:8px}
+.q .num{font-size:13px;color:var(--brand);font-weight:700;margin-bottom:6px}
+.q .txt{font-size:18px;font-weight:600;margin-bottom:18px;line-height:1.45}
+.opt{border:1.5px solid var(--line);border-radius:13px;padding:15px 17px;cursor:pointer;transition:.15s;margin-bottom:11px;display:flex;align-items:center;gap:13px;background:var(--card)}
+.opt:hover{border-color:var(--brand);background:#f8faff}
+.opt.sel{border-color:var(--brand);background:#eef3ff}
+.opt .mk{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:0 0 auto;display:grid;place-items:center}
+.opt.sel .mk{border-color:var(--brand);background:var(--brand)}
+.opt.sel .mk::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.likert{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:6px}
+.lk{border:1.5px solid var(--line);border-radius:11px;padding:12px 4px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:.15s;background:var(--card)}
+.lk:hover{border-color:var(--brand)}
+.lk.sel{border-color:var(--brand);background:var(--brand);color:#fff}
+.lk .big{display:block;font-size:18px;font-weight:800}
+
+/* result */
+.result-hero{text-align:center;padding:30px 20px}
+.animal-badge{width:96px;height:96px;border-radius:26px;display:grid;place-items:center;font-size:48px;margin:0 auto 14px;color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.chip{padding:8px 16px;border-radius:30px;font-weight:700;font-size:14px;background:#eef2ff;color:var(--brand-ink)}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+.res-box{border:1px solid var(--line);border-radius:14px;padding:16px}
+.res-box .k{font-size:13px;color:var(--muted)}
+.res-box .v{font-size:22px;font-weight:800;margin-top:2px}
+.fitbar{height:10px;background:var(--line);border-radius:20px;overflow:hidden;margin-top:8px}
+.fitbar>div{height:100%;border-radius:20px}
+
+/* HR table */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.toolbar input,.toolbar select{width:auto;flex:1;min-width:140px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);cursor:pointer;white-space:nowrap}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:#f8faff}
+.fitpill{font-weight:800;padding:3px 10px;border-radius:20px;font-size:13px}
+.mini{font-size:12px;color:var(--muted)}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(16,24,45,.5);backdrop-filter:blur(3px);z-index:100;display:grid;place-items:center;padding:18px}
+.modal{background:var(--card);border-radius:20px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:26px;box-shadow:var(--shadow)}
+.modal h2{margin-bottom:14px}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 14px;font-size:14px}
+.kv .k{color:var(--muted)}
+.close{float:right;cursor:pointer;color:var(--muted);font-size:22px;line-height:1;border:none;background:none}
+
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+@media(max-width:600px){
+  .row,.row3,.res-grid{grid-template-columns:1fr}
+  h1{font-size:22px}
+  .likert{gap:5px}.lk{padding:10px 2px;font-size:12px}
+}
+.notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:12px 14px;border-radius:12px;font-size:13px;margin-top:16px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="logo" onclick="go('landing')"><span class="dot">✦</span> Talent&nbsp;Match</div>
+    <div class="hrlink" onclick="openHR()">👤 สำหรับ HR</div>
+  </div>
+</div>
+
+<div class="wrap" id="app"></div>
+
+<!-- modal mount -->
+<div id="modalMount"></div>
+
+<script>
+/* ============================================================
+   CONFIG — แก้ตรงนี้ได้ (บริษัท / รหัส HR / Google Sheets URL)
+   ============================================================ */
+const CONFIG = {
+  // ค่าเริ่มต้น — HR วาง Project URL + anon key ได้จาก "สำหรับ HR ▸ ⚙️ ตั้งค่า" (เก็บใน localStorage)
+  supaUrl: "https://lixhcanbovjehwlrulgt.supabase.co",           // โปรเจกต์ Recruitment
+  supaKey: "sb_publishable_j2HzZDBbbBYrJVTCsX6yfA_4dqAD7Du",     // publishable key (ค่าสาธารณะ ปลอดภัยที่จะฝัง — ข้อมูลคุมด้วย RLS)
+  hrPassword: "hachi2026",  // ใช้เฉพาะโหมดออฟไลน์ (เมื่อยังไม่ได้ตั้ง Supabase)
+};
+const CFG_KEY='recruit_config';
+function cfg(){ return Object.assign({}, CONFIG, JSON.parse(localStorage.getItem(CFG_KEY)||'{}')); }
+
+// ---------- Supabase client ----------
+let sb=null;
+function initSupa(){
+  const c=cfg();
+  try{ sb = (c.supaUrl && c.supaKey && window.supabase) ? window.supabase.createClient(c.supaUrl, c.supaKey) : null; }
+  catch(e){ console.warn('สร้าง Supabase client ไม่ได้:',e); sb=null; }
+  return sb;
+}
+// แปลงข้อมูลระหว่างรูปแบบแอป <-> คอลัมน์ในตาราง
+function rowToPosition(p){ return {id:p.id, co:p.company_id, title:p.title, dept:p.dept, type:p.type, desc:p.description,
+  target:{animal:p.target_animal, mbti:p.target_mbti, mindset:p.target_mindset||'any', social:p.target_social||'any'}}; }
+function recToRow(r){ return {id:r.id, company_id:r.companyId, company:r.company, position_id:r.positionId, position:r.position,
+  name:r.name, nick:r.nick, phone:r.phone, line_id:r.line, email:r.email, edu:r.edu, about:r.about, experience:r.exp,
+  salary:r.salary, start_date:r.start||null, source:r.source, animal_key:r.animalKey, animal:r.animal, mbti:r.mbti,
+  mindset:r.mindset, mindset_pct:r.mindsetPct, social:r.social, social_pct:r.socialPct, fit:r.fit,
+  resume_name:r.resumeName||null, resume_path:r.resumePath||null}; }
+function rowToApp(r){ return {id:r.id, ts:r.created_at, companyId:r.company_id, company:r.company, positionId:r.position_id,
+  position:r.position, name:r.name, nick:r.nick, phone:r.phone, line:r.line_id, email:r.email, edu:r.edu, about:r.about,
+  exp:r.experience, salary:r.salary, start:r.start_date, source:r.source, animalKey:r.animal_key, animal:r.animal,
+  mbti:r.mbti, mindset:r.mindset, mindsetPct:r.mindset_pct, social:r.social, socialPct:r.social_pct, fit:r.fit,
+  resumeName:r.resume_name, resumePath:r.resume_path}; }
+function dataUrlToBlob(dataUrl){
+  const m=dataUrl.match(/^data:([^;]+);base64,(.*)$/); if(!m)return null;
+  const bin=atob(m[2]); const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  return new Blob([arr],{type:m[1]});
+}
+
+let COMPANIES = [
+  {id:'hachi',   name:'Hachi Dental Clinic', tagline:'คลินิกทันตกรรม',        color:'#00a3a3', icon:'H'},
+  {id:'sunway',  name:'SUPERSUNWAY',         tagline:'มาร์เก็ตติ้ง / มีเดีย',  color:'#f43f5e', icon:'S'},
+  {id:'b2b',     name:'B2B4Dent',            tagline:'จัดจำหน่ายวัสดุทันตกรรม', color:'#3b6cff', icon:'B'},
+];
+
+/* ตำแหน่งงาน (ค่าเริ่มต้น) — จริง ๆ HR แก้ผ่าน Google Sheets ได้
+   target = โปรไฟล์ที่เหมาะกับตำแหน่ง ใช้คิด fit score
+   animal: bull|eagle|bear|mouse | mbti: ตัวอักษรที่อยากได้ | mindset:growth|any | social:extrovert|introvert|any */
+let POSITIONS = [
+  {id:'p1', co:'hachi', title:'ผู้จัดการสาขา',      dept:'บริหาร',  type:'ประจำ',  desc:'บริหารทีม วางแผน คุมมาตรฐานบริการ ประสานแพทย์–ลูกค้า (ประสบการณ์ผู้จัดการ 1–2 ปี)',
+    target:{animal:'bull', mbti:'ENTJ', mindset:'growth', social:'extrovert'}},
+  {id:'p2', co:'hachi', title:'เคาน์เตอร์ & แอดมิน', dept:'หน้าร้าน', type:'ประจำ', desc:'ต้อนรับ นัดหมาย ดูแลคิว งานขาย ตอบแชท (ใกล้ BTS แบริ่ง)',
+    target:{animal:'eagle', mbti:'ESFP', mindset:'growth', social:'extrovert'}},
+  {id:'p2b',co:'hachi', title:'ผู้ช่วยทันตแพทย์',    dept:'คลินิก',  type:'ประจำ', desc:'เน้นงานทันตกรรมสวยงาม วีเนียร์ ฟอกสีฟัน รากเทียม (ประสบการณ์ 1 ปีขึ้นไป)',
+    target:{animal:'bear', mbti:'ESFJ', mindset:'growth', social:'extrovert'}},
+  {id:'p3', co:'sunway', title:'Content Creator / ตัดต่อ', dept:'ครีเอทีฟ', type:'ประจำ', desc:'ถ่าย ตัดต่อวิดีโอสั้น ทำคอนเทนต์ลงโซเชียล',
+    target:{animal:'eagle', mbti:'ENFP', mindset:'growth', social:'extrovert'}},
+  {id:'p4', co:'sunway', title:'Performance Marketing', dept:'มีเดีย',  type:'ประจำ', desc:'ยิงแอด วิเคราะห์ตัวเลข ปรับแคมเปญ',
+    target:{animal:'mouse', mbti:'INTJ', mindset:'growth', social:'any'}},
+  {id:'p5', co:'b2b',    title:'พนักงานขาย (Sales)',    dept:'ขาย',     type:'ประจำ', desc:'ดูแลลูกค้าคลินิก เสนอสินค้า ปิดการขาย',
+    target:{animal:'bull', mbti:'ENTJ', mindset:'growth', social:'extrovert'}},
+  {id:'p6', co:'b2b',    title:'ธุรการ / คลังสินค้า',    dept:'ปฏิบัติการ', type:'ประจำ', desc:'จัดการสต็อก เอกสาร ประสานงานจัดส่ง',
+    target:{animal:'mouse', mbti:'ISTJ', mindset:'any', social:'introvert'}},
+];
+
+/* ============================================================
+   แบบทดสอบ
+   ============================================================ */
+
+// 1) สัตว์ 4 ทิศ — กระทิง(D) อินทรี(I) หมี(S) หนู(C)
+const ANIMALS = {
+  bull:  {name:'กระทิง', emoji:'🐃', color:'var(--bull)',  disc:'D — ความเป็นผู้นำ (Dominance)',
+    desc:'ผู้นำ มุ่งเป้า ตัดสินใจเร็ว กล้าลุย ชอบความท้าทาย',
+    traits:['กล้าตัดสินใจ','มุ่งผลลัพธ์','ชอบความท้าทาย','เป็นผู้นำโดยธรรมชาติ'],
+    roles:['ผู้จัดการ / หัวหน้าทีม','งานขาย ปิดการขาย','งานที่ต้องตัดสินใจเร็ว'],
+    watch:'อาจใจร้อน มองข้ามรายละเอียดหรือความรู้สึกของคนอื่น'},
+  eagle: {name:'อินทรี', emoji:'🦅', color:'var(--eagle)', disc:'I — การโน้มน้าว (Influence)',
+    desc:'มองภาพใหญ่ ช่างจูงใจ เข้าสังคมเก่ง มีวิสัยทัศน์',
+    traits:['เข้าสังคมเก่ง','ช่างจูงใจ','มีพลังบวก','คิดสร้างสรรค์'],
+    roles:['งานลูกค้าสัมพันธ์ / ต้อนรับ','การตลาด คอนเทนต์','งานที่ต้องสื่อสารกับคน'],
+    watch:'อาจไม่เก่งงานละเอียด หรือเบื่อง่ายกับงานซ้ำ ๆ'},
+  bear:  {name:'หมี',   emoji:'🐻', color:'var(--bear)',  disc:'S — ความมั่นคง (Steadiness)',
+    desc:'ใจเย็น เป็นทีมเวิร์ก อบอุ่น ซื่อสัตย์ ประนีประนอม',
+    traits:['ใจเย็น น่าไว้ใจ','เป็นทีมเวิร์ก','อดทน สม่ำเสมอ','รับฟังคนอื่น'],
+    roles:['ผู้ช่วย / งานบริการดูแล','งานที่ต้องความต่อเนื่อง','ประสานงานภายในทีม'],
+    watch:'อาจไม่ชอบการเปลี่ยนแปลงกะทันหัน และเกรงใจจนไม่กล้าปฏิเสธ'},
+  mouse: {name:'หนู',   emoji:'🐭', color:'var(--mouse)', disc:'C — ความรอบคอบ (Conscientiousness)',
+    desc:'ละเอียด รอบคอบ วิเคราะห์เก่ง ทำตามระบบ เน้นคุณภาพ',
+    traits:['ละเอียดรอบคอบ','วิเคราะห์เก่ง','ทำตามระบบ','เน้นคุณภาพงาน'],
+    roles:['บัญชี / ธุรการ / คลัง','งานที่ต้องความแม่นยำ','วิเคราะห์ข้อมูล'],
+    watch:'อาจตัดสินใจช้าเพราะต้องการข้อมูลครบ และเครียดกับความไม่สมบูรณ์'},
+};
+
+// คำอธิบาย 16 บุคลิกภาพ (MBTI) — ชื่อไทยตาม 16personalities
+const MBTI_TYPES = {
+  INTJ:{name:'สถาปนิก (Architect)',  desc:'นักวางแผนเชิงกลยุทธ์ คิดเป็นระบบ มองระยะยาว ทำงานอิสระได้ดี',        roles:'วางแผน กลยุทธ์ วิเคราะห์'},
+  INTP:{name:'นักตรรกะ (Logician)',  desc:'ช่างคิด ช่างสงสัย ชอบแก้ปัญหาเชิงเหตุผลและไอเดียใหม่ ๆ',            roles:'วิจัย พัฒนา ระบบ'},
+  ENTJ:{name:'ผู้บัญชาการ (Commander)', desc:'ผู้นำโดยธรรมชาติ เด็ดขาด มุ่งเป้า จัดการทีมและงานให้ถึงเป้าได้',    roles:'ผู้บริหาร หัวหน้าทีม'},
+  ENTP:{name:'นักโต้วาที (Debater)', desc:'ไอเดียเยอะ ยืดหยุ่น ชอบความท้าทายและถกเถียงเพื่อหาทางที่ดีกว่า',       roles:'การตลาด กลยุทธ์ พัฒนาธุรกิจ'},
+  INFJ:{name:'ผู้สนับสนุน (Advocate)', desc:'มีอุดมการณ์ เข้าใจคนลึกซึ้ง ทำงานเพื่อเป้าหมายที่มีความหมาย',        roles:'HR ที่ปรึกษา งานดูแลคน'},
+  INFP:{name:'ผู้ไกล่เกลี่ย (Mediator)', desc:'อ่อนโยน มีจินตนาการ ยึดคุณค่าภายใน ใส่ใจความรู้สึก',              roles:'คอนเทนต์ ครีเอทีฟ งานดูแล'},
+  ENFJ:{name:'ผู้นำเสน่ห์ (Protagonist)', desc:'สร้างแรงบันดาลใจ เข้ากับคนง่าย ดึงศักยภาพทีมออกมาได้',           roles:'หัวหน้าทีม เทรนเนอร์ ลูกค้าสัมพันธ์'},
+  ENFP:{name:'นักรณรงค์ (Campaigner)', desc:'มีพลัง กระตือรือร้น คิดบวก ชอบเชื่อมโยงผู้คนและไอเดีย',             roles:'การตลาด คอนเทนต์ งานลูกค้า'},
+  ISTJ:{name:'ผู้พิทักษ์ (Logistician)', desc:'น่าเชื่อถือ มีวินัย ทำตามขั้นตอน รับผิดชอบสูง',                   roles:'บัญชี ธุรการ คลังสินค้า'},
+  ISFJ:{name:'ผู้ปกป้อง (Defender)', desc:'ใส่ใจ อบอุ่น ทุ่มเทดูแลผู้อื่น ละเอียดและเชื่อถือได้',               roles:'ผู้ช่วย บริการ ดูแลลูกค้า'},
+  ESTJ:{name:'ผู้บริหาร (Executive)', desc:'จัดระเบียบเก่ง เด็ดขาด บริหารงาน/คนตามระบบได้อย่างมีประสิทธิภาพ',      roles:'ผู้จัดการ หัวหน้าปฏิบัติการ'},
+  ESFJ:{name:'กงสุล (Consul)',       desc:'ใจดี ชอบช่วยเหลือ เข้าสังคมเก่ง ใส่ใจความสุขของทีมและลูกค้า',         roles:'ต้อนรับ บริการ ผู้ช่วย'},
+  ISTP:{name:'นักปฏิบัติ (Virtuoso)', desc:'มือทำ แก้ปัญหาเฉพาะหน้าเก่ง ชอบงานที่จับต้องได้',                   roles:'ช่างเทคนิค งานภาคปฏิบัติ'},
+  ISFP:{name:'นักผจญภัย (Adventurer)', desc:'มีสุนทรียะ อ่อนโยน ยืดหยุ่น ทำงานสร้างสรรค์ได้ดี',                roles:'ดีไซน์ กราฟิก งานสร้างสรรค์'},
+  ESTP:{name:'ผู้ประกอบการ (Entrepreneur)', desc:'คล่องแคล่ว กล้าเสี่ยง ชอบลงมือทำ เก่งงานที่ต้องตัดสินใจไว',    roles:'งานขาย ภาคสนาม อีเวนต์'},
+  ESFP:{name:'ผู้ให้ความบันเทิง (Entertainer)', desc:'สนุกสนาน มีชีวิตชีวา เข้ากับคนง่าย เก่งงานหน้าร้าน/บริการ',  roles:'หน้าร้าน บริการ อีเวนต์'},
+};
+const mbtiInfo=(t)=> MBTI_TYPES[t] || {name:t, desc:'', roles:''};
+const ANIMAL_Q = [
+  {t:'เวลาเจอปัญหาใหม่ ๆ คุณมักจะ...', o:[
+    {a:'bull',  t:'ลุยแก้ทันที ตัดสินใจเร็ว'},
+    {a:'eagle', t:'ชวนคนอื่นระดมสมองหาไอเดีย'},
+    {a:'bear',  t:'ค่อย ๆ ดูสถานการณ์ ไม่รีบ'},
+    {a:'mouse', t:'หาข้อมูล วิเคราะห์ให้รอบด้านก่อน'}]},
+  {t:'ในการทำงานเป็นทีม คุณมักเป็นคนที่...', o:[
+    {a:'bull',  t:'นำทีม กำหนดทิศทาง'},
+    {a:'eagle', t:'สร้างบรรยากาศ กระตุ้นทีม'},
+    {a:'bear',  t:'ประสานงาน ทำให้ทุกคนโอเค'},
+    {a:'mouse', t:'ดูรายละเอียด เช็กความถูกต้อง'}]},
+  {t:'สิ่งที่ทำให้คุณรู้สึกภูมิใจในงานคือ...', o:[
+    {a:'bull',  t:'ทำเป้าสำเร็จ ชนะความท้าทาย'},
+    {a:'eagle', t:'ได้รับการยอมรับ เป็นที่ชื่นชอบ'},
+    {a:'bear',  t:'ทีมมีความสุข ไม่มีความขัดแย้ง'},
+    {a:'mouse', t:'งานออกมาเป๊ะ ไร้ที่ติ'}]},
+  {t:'เวลาตัดสินใจ คุณให้น้ำหนักกับ...', o:[
+    {a:'bull',  t:'ผลลัพธ์และความเร็ว'},
+    {a:'eagle', t:'ความรู้สึกและภาพรวม'},
+    {a:'bear',  t:'ผลกระทบต่อคนอื่น'},
+    {a:'mouse', t:'ข้อมูลและเหตุผล'}]},
+  {t:'สไตล์การสื่อสารของคุณคือ...', o:[
+    {a:'bull',  t:'ตรงประเด็น สั้น กระชับ'},
+    {a:'eagle', t:'มีชีวิตชีวา ชวนคุยสนุก'},
+    {a:'bear',  t:'นุ่มนวล รับฟังเยอะ'},
+    {a:'mouse', t:'มีข้อมูลรองรับ ชัดเจน'}]},
+  {t:'สิ่งที่คุณกลัวที่สุดในการทำงานคือ...', o:[
+    {a:'bull',  t:'เสียเวลา ไม่มีความคืบหน้า'},
+    {a:'eagle', t:'ถูกมองข้าม ไม่มีตัวตน'},
+    {a:'bear',  t:'ความขัดแย้ง การเปลี่ยนแปลงกะทันหัน'},
+    {a:'mouse', t:'ทำผิดพลาด งานไม่เรียบร้อย'}]},
+  {t:'โต๊ะทำงาน/พื้นที่ของคุณมักจะ...', o:[
+    {a:'bull',  t:'เท่าที่จำเป็น เน้นใช้งาน'},
+    {a:'eagle', t:'มีของที่ชอบ สีสัน โชว์ตัวตน'},
+    {a:'bear',  t:'อบอุ่น มีของคนที่รัก'},
+    {a:'mouse', t:'เป็นระเบียบ จัดหมวดหมู่'}]},
+  {t:'เวลามีงานด่วนเข้ามา คุณ...', o:[
+    {a:'bull',  t:'จัดการเลย ลุยก่อน'},
+    {a:'eagle', t:'ดึงคนมาช่วย กระจายงาน'},
+    {a:'bear',  t:'ทำอย่างใจเย็น ทีละอย่าง'},
+    {a:'mouse', t:'วางแผนขั้นตอนก่อนเริ่ม'}]},
+  {t:'คำชมที่คุณอยากได้ยินคือ...', o:[
+    {a:'bull',  t:'"เก่ง ทำสำเร็จได้จริง"'},
+    {a:'eagle', t:'"สนุก อยู่ด้วยแล้วมีพลัง"'},
+    {a:'bear',  t:'"ใจดี ไว้ใจได้"'},
+    {a:'mouse', t:'"ละเอียด เชื่อถือได้"'}]},
+  {t:'เป้าหมายในการทำงานของคุณคือ...', o:[
+    {a:'bull',  t:'เติบโต ก้าวหน้า มีอำนาจตัดสินใจ'},
+    {a:'eagle', t:'ได้ทำสิ่งใหม่ ๆ มีอิสระ'},
+    {a:'bear',  t:'มั่นคง ทีมดี บรรยากาศดี'},
+    {a:'mouse', t:'เชี่ยวชาญ ทำงานมีคุณภาพ'}]},
+];
+
+// 2) MBTI ฉบับสั้น — 4 แกน แกนละ 3 ข้อ (A ซ้าย = ตัวแรก, B ขวา = ตัวหลัง)
+const MBTI_Q = [
+  {axis:['E','I'], a:'ได้พลังจากการอยู่กับผู้คน เจอคนเยอะ ๆ', b:'ได้พลังจากการอยู่คนเดียว เงียบ ๆ'},
+  {axis:['E','I'], a:'คิดออกมาดัง ๆ พูดไปคิดไป',              b:'คิดในใจให้ตกผลึกก่อนค่อยพูด'},
+  {axis:['E','I'], a:'ชอบเริ่มบทสนทนากับคนแปลกหน้า',          b:'รอให้คนอื่นเข้ามาคุยก่อน'},
+  {axis:['S','N'], a:'สนใจข้อเท็จจริงและรายละเอียดที่จับต้องได้', b:'สนใจภาพรวม ความเป็นไปได้ และไอเดีย'},
+  {axis:['S','N'], a:'เชื่อสิ่งที่พิสูจน์ได้ ทำตามที่เคยได้ผล',   b:'ชอบลองวิธีใหม่ จินตนาการถึงอนาคต'},
+  {axis:['S','N'], a:'ทำงานเป็นขั้นตอนทีละสเต็ป',              b:'กระโดดข้ามไปมาตามแรงบันดาลใจ'},
+  {axis:['T','F'], a:'ตัดสินด้วยเหตุผลและตรรกะ',              b:'ตัดสินด้วยความรู้สึกและคุณค่าของคน'},
+  {axis:['T','F'], a:'ตรงไปตรงมา แม้จะฟังดูแรง',              b:'ถนอมน้ำใจ เลือกคำพูด'},
+  {axis:['T','F'], a:'มองความยุติธรรมและความถูกต้องเป็นหลัก',   b:'มองความกลมเกลียวและความเห็นอกเห็นใจ'},
+  {axis:['J','P'], a:'ชอบวางแผน มีตารางชัดเจน',              b:'ชอบยืดหยุ่น เปิดทางเลือกไว้'},
+  {axis:['J','P'], a:'ทำงานให้เสร็จก่อนแล้วค่อยเล่น',          b:'ทำไปเรื่อย ๆ เร่งช่วงใกล้เดดไลน์'},
+  {axis:['J','P'], a:'ชอบตัดสินใจให้จบ ปิดเรื่อง',            b:'ชอบเก็บทางเลือกไว้ ยังไม่รีบสรุป'},
+];
+
+// 3) Mindset — Growth vs Fixed (Likert 1-5) growth:true = ยิ่งเห็นด้วยยิ่ง growth
+const MINDSET_Q = [
+  {t:'ความสามารถพัฒนาได้เสมอถ้าเราพยายามมากพอ', growth:true},
+  {t:'ความล้มเหลวคือโอกาสในการเรียนรู้',           growth:true},
+  {t:'ผมชอบงานที่ท้าทายแม้จะเสี่ยงทำพลาด',          growth:true},
+  {t:'คนเราเก่งมาแต่เกิด เปลี่ยนแปลงได้ยาก',        growth:false},
+  {t:'ถ้าต้องพยายามมาก แปลว่าเราไม่เก่งด้านนั้น',    growth:false},
+  {t:'คำติชมช่วยให้ผมพัฒนาตัวเองได้',              growth:true},
+];
+
+// 4) Extrovert / Introvert (Likert 1-5) ทุกข้อโน้มไป extrovert
+const EI_Q = [
+  {t:'ผมรู้สึกกระปรี้กระเปร่าเมื่อได้เจอผู้คนเยอะ ๆ'},
+  {t:'ผมชอบเป็นจุดสนใจในวงสนทนา'},
+  {t:'ผมมักพูดคุยกับคนแปลกหน้าได้ง่าย'},
+  {t:'การทำงานเป็นกลุ่มสนุกกว่าการทำงานคนเดียว'},
+  {t:'ผมชอบกิจกรรมที่มีคนเยอะและมีชีวิตชีวา'},
+];
+
+const LIKERT = ['ไม่เห็นด้วยมาก','ไม่เห็นด้วย','กลาง ๆ','เห็นด้วย','เห็นด้วยมาก'];
+
+/* ============================================================
+   STATE + STORAGE
+   ============================================================ */
+const S = {
+  screen:'landing', company:null, position:null,
+  form:{}, ans:{animal:{}, mbti:{}, mindset:{}, ei:{}},
+  step:0, // ใช้ในหน้าแบบทดสอบ (0=info เสร็จแล้วเข้าเทสต์)
+};
+const STORE_KEY='recruit_apps_v1';
+const loadApps = () => JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
+const saveApps = (a) => localStorage.setItem(STORE_KEY, JSON.stringify(a));
+
+/* ============================================================
+   SCORING
+   ============================================================ */
+function scoreAnimal(){
+  const c={bull:0,eagle:0,bear:0,mouse:0};
+  Object.values(S.ans.animal).forEach(a=>{if(a)c[a]++});
+  const sorted=Object.entries(c).sort((x,y)=>y[1]-x[1]);
+  return {counts:c, primary:sorted[0][0], secondary:sorted[1][0]};
+}
+function scoreMBTI(){
+  const tally={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+  MBTI_Q.forEach((q,i)=>{const v=S.ans.mbti[i]; if(v)tally[v]++;});
+  const pick=(x,y)=>tally[x]>=tally[y]?x:y;
+  return pick('E','I')+pick('S','N')+pick('T','F')+pick('J','P');
+}
+function scoreMindset(){
+  let sum=0,n=0;
+  MINDSET_Q.forEach((q,i)=>{const v=S.ans.mindset[i]; if(v){n++; sum+=q.growth?v:(6-v);}});
+  const pct=n?Math.round(((sum/n)-1)/4*100):0;
+  return {pct, label: pct>=60?'Growth Mindset':pct>=40?'ผสมผสาน':'Fixed Mindset'};
+}
+function scoreEI(){
+  let sum=0,n=0;
+  EI_Q.forEach((q,i)=>{const v=S.ans.ei[i]; if(v){n++; sum+=v;}});
+  const avg=n?sum/n:3;
+  const pct=Math.round((avg-1)/4*100);
+  return {pct, label: avg>=3.4?'Extrovert':avg<=2.6?'Introvert':'Ambivert'};
+}
+function computeFit(pos){
+  const an=scoreAnimal(), mb=scoreMBTI(), md=scoreMindset(), ei=scoreEI();
+  const t=pos.target; let score=0;
+  // animal 40
+  if(t.animal===an.primary) score+=40;
+  else if(t.animal===an.secondary) score+=24;
+  // mbti 30 (นับตัวอักษรที่ตรง)
+  let m=0; for(let i=0;i<4;i++) if(mb[i]===t.mbti[i]) m++;
+  score+=Math.round(m/4*30);
+  // mindset 15
+  if(t.mindset==='any') score+=15;
+  else if(t.mindset==='growth') score+=Math.round(md.pct/100*15);
+  // social 15
+  if(t.social==='any') score+=15;
+  else if(t.social==='extrovert') score+=Math.round(ei.pct/100*15);
+  else if(t.social==='introvert') score+=Math.round((100-ei.pct)/100*15);
+  return Math.min(100,Math.round(score));
+}
+const fitColor=(f)=> f>=75?'var(--ok)': f>=50?'var(--warn)':'var(--bull)';
+
+/* ============================================================
+   NAV + RENDER
+   ============================================================ */
+const app=()=>document.getElementById('app');
+function go(screen){S.screen=screen; window.scrollTo(0,0); render();}
+
+function render(){
+  const s=S.screen;
+  if(s==='landing') return renderLanding();
+  if(s==='positions') return renderPositions();
+  if(s==='form') return renderForm();
+  if(s==='test') return renderTest();
+  if(s==='result') return renderResult();
+  if(s==='done') return renderDone();
+  if(s==='hr') return (sb && !HR_AUTH) ? renderHRLogin() : renderHR();
+}
+
+function renderLanding(){
+  app().innerHTML=`
+    <h1>ร่วมงานกับเรา 👋</h1>
+    <p class="sub">เลือกบริษัทที่คุณสนใจ กรอกใบสมัคร แล้วทำแบบทดสอบบุคลิกภาพสั้น ๆ เพื่อให้เราจับคู่คุณกับตำแหน่งที่ใช่</p>
+    <div class="companies">
+      ${COMPANIES.map(c=>`
+        <div class="co" onclick="selectCompany('${c.id}')">
+          <div class="badge" style="background:${c.color}">${c.icon}</div>
+          <h3>${c.name}</h3>
+          <p>${c.tagline}</p>
+          <div class="go">→</div>
+        </div>`).join('')}
+    </div>
+    ${sb?'':`<div class="notice">ℹ️ โหมดออฟไลน์ — ข้อมูลเก็บในเครื่องนี้ ตั้งค่า Supabase ที่ปุ่ม “สำหรับ HR ▸ ⚙️ ตั้งค่า” เพื่อใช้งานออนไลน์</div>`}`;
+}
+function selectCompany(id){S.company=COMPANIES.find(c=>c.id===id); go('positions');}
+
+function renderPositions(){
+  const c=S.company;
+  const list=POSITIONS.filter(p=>p.co===c.id);
+  app().innerHTML=`
+    <button class="back" onclick="go('landing')">← เปลี่ยนบริษัท</button>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+      <div class="badge" style="background:${c.color};width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800">${c.icon}</div>
+      <h1 style="margin:0">${c.name}</h1>
+    </div>
+    <p class="sub">ตำแหน่งที่เปิดรับ ${list.length} ตำแหน่ง</p>
+    ${list.length? list.map(p=>`
+      <div class="pos" onclick="selectPosition('${p.id}')">
+        <div>
+          <h3>${p.title}</h3>
+          <div class="meta">${p.desc}</div>
+          <div style="margin-top:8px"><span class="tag">${p.dept}</span><span class="tag">${p.type}</span></div>
+        </div>
+        <div style="color:var(--muted);font-size:22px">→</div>
+      </div>`).join('')
+      : `<div class="empty">ยังไม่มีตำแหน่งเปิดรับในขณะนี้</div>`}`;
+}
+function selectPosition(id){S.position=POSITIONS.find(p=>p.id===id); go('form');}
+
+function renderForm(){
+  const p=S.position, f=S.form;
+  app().innerHTML=`
+    <button class="back" onclick="go('positions')">← เลือกตำแหน่งอื่น</button>
+    <div class="progress">
+      <div class="lbl"><span>ขั้นที่ 1 จาก 3 · ข้อมูลผู้สมัคร</span><span>33%</span></div>
+      <div class="bar"><div class="fill" style="width:33%"></div></div>
+    </div>
+    <h2>สมัครตำแหน่ง: ${p.title}</h2>
+    <p class="sub">${S.company.name} · ${p.dept}</p>
+    <div class="card">
+      <div class="row">
+        <div class="field"><label class="req">ชื่อ - นามสกุล</label><input id="fname" value="${f.name||''}"></div>
+        <div class="field"><label class="req">ชื่อเล่น</label><input id="fnick" value="${f.nick||''}"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="req">เบอร์โทรศัพท์มือถือ</label><input id="fphone" value="${f.phone||''}"></div>
+        <div class="field"><label>LINE ID</label><input id="fline" value="${f.line||''}"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Email</label><input id="femail" type="email" value="${f.email||''}"></div>
+        <div class="field"><label>วุฒิการศึกษาสูงสุด</label>
+          <select id="fedu">
+            <option value="">— เลือก —</option>
+            ${['มัธยมต้น','มัธยมปลาย / ปวช.','ปวส. / อนุปริญญา','ปริญญาตรี','ปริญญาโทขึ้นไป','อื่น ๆ'].map(o=>`<option ${f.edu===o?'selected':''}>${o}</option>`).join('')}
+          </select></div>
+      </div>
+
+      <div class="field"><label>แนะนำตัวเองสั้น ๆ (จุดเด่น นิสัย สิ่งที่อยากให้เรารู้จัก)</label>
+        <textarea id="fabout" placeholder="เล่าเกี่ยวกับตัวคุณ...">${f.about||''}</textarea></div>
+      <div class="field"><label>ประสบการณ์ทำงานที่ผ่านมา (ที่ไหน ตำแหน่งอะไร กี่ปี เหตุผลที่ออก)</label>
+        <textarea id="fexp" placeholder="ถ้าไม่มีประสบการณ์ ใส่ &quot;-&quot; ได้">${f.exp||''}</textarea></div>
+
+      <div class="row">
+        <div class="field"><label>เงินเดือนที่คาดหวัง (บาท/เดือน)</label><input id="fsalary" value="${f.salary||''}" placeholder="เช่น 18,000 - 22,000"></div>
+        <div class="field"><label>เริ่มงานได้เร็วที่สุดวันที่</label><input id="fstart" type="date" value="${f.start||''}"></div>
+      </div>
+      <div class="field"><label>รู้จักการรับสมัครนี้จากช่องทางไหน</label>
+        <select id="fsource">
+          ${['Facebook','Instagram','TikTok','LINE / LINE OA','JobThai / เว็บหางาน','เพื่อนแนะนำ','เว็บไซต์บริษัท','อื่น ๆ'].map(o=>`<option ${f.source===o?'selected':''}>${o}</option>`).join('')}
+        </select></div>
+
+      <div class="field"><label>แนบ Resume / CV หรือรูปถ่าย (ถ้ามี)</label>
+        <input type="file" id="fresume" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" onchange="handleResume(this)">
+        <div class="hint" id="resumeHint">${f.resumeName? '📎 '+f.resumeName : 'รองรับ PDF / รูปภาพ / Word · ไม่เกิน 3MB'}</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary block" onclick="submitForm()">ถัดไป: ทำแบบทดสอบ →</button>
+    </div>`;
+}
+function handleResume(input){
+  const file=input.files[0]; const hint=document.getElementById('resumeHint');
+  if(!file)return;
+  if(file.size>3*1024*1024){alert('ไฟล์ใหญ่เกิน 3MB กรุณาเลือกไฟล์ใหม่');input.value='';return;}
+  const reader=new FileReader();
+  reader.onload=()=>{ S.form.resumeName=file.name; S.form.resumeData=reader.result;
+    if(hint)hint.textContent='📎 '+file.name+' (แนบแล้ว)'; };
+  reader.readAsDataURL(file);
+}
+function submitForm(){
+  const g=id=>{const el=document.getElementById(id); return el?el.value.trim():'';};
+  const f={
+    name:g('fname'),nick:g('fnick'),phone:g('fphone'),line:g('fline'),email:g('femail'),
+    edu:g('fedu'),about:g('fabout'),exp:g('fexp'),salary:g('fsalary'),start:g('fstart'),source:g('fsource'),
+    resumeName:S.form.resumeName||'', resumeData:S.form.resumeData||'',
+  };
+  if(!f.name||!f.nick||!f.phone){alert('กรุณากรอก ชื่อ-นามสกุล, ชื่อเล่น และเบอร์โทรศัพท์');return;}
+  S.form=f; S.step=0; go('test');
+}
+
+/* ---------- แบบทดสอบ (รวม 4 ชุดเป็นหน้าเดียวแบบเลื่อนทีละส่วน) ---------- */
+const TEST_SECTIONS=[
+  {key:'animal',  title:'สัตว์ 4 ทิศ',      sub:'เลือกข้อที่ตรงกับตัวคุณมากที่สุด'},
+  {key:'mbti',    title:'บุคลิกภาพ (MBTI)',  sub:'เลือกข้อความที่ใกล้เคียงคุณมากกว่า'},
+  {key:'mindset', title:'Mindset',           sub:'ให้คะแนนความเห็นด้วยของแต่ละข้อ'},
+  {key:'ei',      title:'พลังงานทางสังคม',    sub:'ให้คะแนนความเห็นด้วยของแต่ละข้อ'},
+];
+function renderTest(){
+  const sec=TEST_SECTIONS[S.step];
+  const total=TEST_SECTIONS.length;
+  const pct=Math.round((S.step)/total*66)+34;
+  app().innerHTML=`
+    <button class="back" onclick="testBack()">← ${S.step===0?'กลับไปแก้ใบสมัคร':'ชุดก่อนหน้า'}</button>
+    <div class="progress">
+      <div class="lbl"><span>ขั้นที่ 2 จาก 3 · แบบทดสอบ ${S.step+1}/${total}</span><span>${pct}%</span></div>
+      <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+    </div>
+    <h2>${sec.title}</h2>
+    <p class="sub">${sec.sub}</p>
+    <div class="card">${renderSection(sec.key)}</div>
+    <div class="actions">
+      <button class="btn primary block" onclick="testNext()">${S.step<total-1?'ชุดถัดไป →':'ดูผลลัพธ์ →'}</button>
+    </div>`;
+}
+function renderSection(key){
+  if(key==='animal') return ANIMAL_Q.map((q,i)=>`
+    <div class="q" style="margin-bottom:26px">
+      <div class="num">ข้อ ${i+1}</div><div class="txt">${q.t}</div>
+      ${q.o.map(o=>`<div class="opt ${S.ans.animal[i]===o.a?'sel':''}" onclick="pick('animal',${i},'${o.a}')">
+        <div class="mk"></div><div>${o.t}</div></div>`).join('')}
+    </div>`).join('');
+  if(key==='mbti') return MBTI_Q.map((q,i)=>`
+    <div class="q" style="margin-bottom:24px">
+      <div class="num">ข้อ ${i+1}</div>
+      <div class="opt ${S.ans.mbti[i]===q.axis[0]?'sel':''}" onclick="pick('mbti',${i},'${q.axis[0]}')"><div class="mk"></div><div>${q.a}</div></div>
+      <div class="opt ${S.ans.mbti[i]===q.axis[1]?'sel':''}" onclick="pick('mbti',${i},'${q.axis[1]}')"><div class="mk"></div><div>${q.b}</div></div>
+    </div>`).join('');
+  if(key==='mindset') return MINDSET_Q.map((q,i)=>likertBlock('mindset',i,q.t)).join('');
+  if(key==='ei') return EI_Q.map((q,i)=>likertBlock('ei',i,q.t)).join('');
+}
+function likertBlock(cat,i,txt){
+  return `<div class="q" style="margin-bottom:22px">
+    <div class="num">ข้อ ${i+1}</div><div class="txt" style="font-size:16px">${txt}</div>
+    <div class="likert">
+      ${LIKERT.map((l,v)=>`<div class="lk ${S.ans[cat][i]===v+1?'sel':''}" onclick="pick('${cat}',${i},${v+1})">
+        <span class="big">${v+1}</span>${l}</div>`).join('')}
+    </div></div>`;
+}
+function pick(cat,i,val){S.ans[cat][i]=val; render();}
+function sectionComplete(key){
+  if(key==='animal') return Object.keys(S.ans.animal).length===ANIMAL_Q.length;
+  if(key==='mbti')   return Object.keys(S.ans.mbti).length===MBTI_Q.length;
+  if(key==='mindset')return Object.keys(S.ans.mindset).length===MINDSET_Q.length;
+  if(key==='ei')     return Object.keys(S.ans.ei).length===EI_Q.length;
+}
+function testNext(){
+  const sec=TEST_SECTIONS[S.step];
+  if(!sectionComplete(sec.key)){alert('กรุณาตอบให้ครบทุกข้อก่อนไปต่อ');return;}
+  if(S.step<TEST_SECTIONS.length-1){S.step++; window.scrollTo(0,0); render();}
+  else go('result');
+}
+function testBack(){
+  if(S.step>0){S.step--; window.scrollTo(0,0); render();}
+  else go('form');
+}
+
+/* ---------- ผลลัพธ์ ---------- */
+function renderResult(){
+  const an=scoreAnimal(), A=ANIMALS[an.primary];
+  const mb=scoreMBTI(), MT=mbtiInfo(mb), md=scoreMindset(), ei=scoreEI();
+  const fit=computeFit(S.position);
+  app().innerHTML=`
+    <div class="progress">
+      <div class="lbl"><span>ขั้นที่ 3 จาก 3 · ผลลัพธ์</span><span>100%</span></div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+    </div>
+    <div class="card">
+      <div class="result-hero">
+        <div class="animal-badge" style="background:${A.color}">${A.emoji}</div>
+        <h2>คุณคือสาย “${A.name}”</h2>
+        <p class="mini" style="margin:2px 0 0">${A.disc}</p>
+        <p class="sub" style="margin:8px 0 0">${A.desc}</p>
+        <div class="chips">
+          <span class="chip">MBTI: ${mb}</span>
+          <span class="chip">${md.label}</span>
+          <span class="chip">${ei.label}</span>
+        </div>
+      </div>
+      <div class="res-grid">
+        <div class="res-box"><div class="k">ความเหมาะกับตำแหน่งนี้</div>
+          <div class="v" style="color:${fitColor(fit)}">${fit}%</div>
+          <div class="fitbar"><div style="width:${fit}%;background:${fitColor(fit)}"></div></div>
+          <div class="mini" style="margin-top:6px">${S.position.title} · ${S.company.name}</div>
+        </div>
+        <div class="res-box"><div class="k">Growth Mindset</div>
+          <div class="v">${md.pct}%</div>
+          <div class="fitbar"><div style="width:${md.pct}%;background:var(--brand)"></div></div>
+          <div class="mini" style="margin-top:6px">Extrovert ${ei.pct}%</div>
+        </div>
+      </div>
+
+      <div class="section" style="margin-top:22px">
+        <div class="label">จุดแข็งของคุณ (สาย ${A.name})</div>
+        <div class="pill-row" style="margin-top:8px">${A.traits.map(t=>`<span class="chip">${t}</span>`).join('')}</div>
+        <p class="mini" style="margin-top:10px">💼 เหมาะกับงาน: ${A.roles.join(' · ')}</p>
+        <p class="mini" style="margin-top:4px">⚠️ จุดที่ควรระวัง: ${A.watch}</p>
+      </div>
+
+      <div class="section" style="margin-top:18px;border-top:1px solid var(--line);padding-top:18px">
+        <div class="label">บุคลิกภาพ MBTI</div>
+        <div style="font-size:18px;font-weight:800;margin-top:6px">${mb} — ${MT.name}</div>
+        <p class="sub" style="margin:4px 0 0">${MT.desc}</p>
+        ${MT.roles?`<p class="mini" style="margin-top:8px">💼 สายงานที่มักโดดเด่น: ${MT.roles}</p>`:''}
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" onclick="go('test')">← ทบทวนคำตอบ</button>
+      <button class="btn primary" style="flex:1" onclick="finalSubmit()">ส่งใบสมัคร ✓</button>
+    </div>`;
+}
+function buildRecord(){
+  const an=scoreAnimal(), mb=scoreMBTI(), md=scoreMindset(), ei=scoreEI();
+  return {
+    id:'A'+Date.now(),
+    ts:new Date().toISOString(),
+    company:S.company.name, companyId:S.company.id,
+    position:S.position.title, positionId:S.position.id,
+    ...S.form,
+    animal:ANIMALS[an.primary].name, animalKey:an.primary,
+    mbti:mb, mindset:md.label, mindsetPct:md.pct,
+    social:ei.label, socialPct:ei.pct,
+    fit:computeFit(S.position),
+  };
+}
+async function finalSubmit(){
+  const rec=buildRecord();
+  if(sb){
+    try{
+      // 1) อัป Resume เข้า Storage (ถ้ามี)
+      if(rec.resumeData && rec.resumeName){
+        const blob=dataUrlToBlob(rec.resumeData);
+        if(blob){
+          const path=rec.id+'/'+rec.resumeName;
+          // ไม่ใช้ upsert — anon มีสิทธิ์ insert อย่างเดียว (upsert ต้องใช้สิทธิ์ update)
+          const {error:upErr}=await sb.storage.from('resumes').upload(path, blob, {contentType:blob.type});
+          if(!upErr) rec.resumePath=path; else console.warn('อัป Resume ไม่สำเร็จ:',upErr);
+        }
+      }
+      // 2) บันทึกใบสมัครลงตาราง
+      const {error}=await sb.from('applications').insert(recToRow(rec));
+      if(error) throw error;
+      rec.saved=true;
+    }catch(e){ console.warn('บันทึกขึ้น Supabase ไม่สำเร็จ:',e);
+      alert('บันทึกออนไลน์ไม่สำเร็จ ระบบเก็บสำเนาในเครื่องไว้ให้แล้ว'); }
+  }
+  // สำเนาในเครื่อง: ถ้าอัปขึ้น Storage แล้ว ตัด base64 ทิ้งเพื่อประหยัดพื้นที่
+  const localRec=Object.assign({},rec);
+  if(rec.saved && rec.resumePath) delete localRec.resumeData;
+  const apps=loadApps(); apps.push(localRec); saveApps(apps);
+  go('done');
+}
+function renderDone(){
+  app().innerHTML=`
+    <div class="card" style="text-align:center;padding:44px 24px">
+      <div style="font-size:60px">🎉</div>
+      <h2 style="margin-top:10px">ส่งใบสมัครเรียบร้อย!</h2>
+      <p class="sub" style="margin-top:8px">ขอบคุณที่สนใจร่วมงานกับ ${S.company.name}<br>ทีม HR จะติดต่อกลับหากคุณผ่านการพิจารณา</p>
+      <button class="btn primary" style="margin-top:12px" onclick="resetAll()">สมัครตำแหน่งอื่น</button>
+    </div>`;
+}
+function resetAll(){
+  S.company=null;S.position=null;S.form={};S.ans={animal:{},mbti:{},mindset:{},ei:{}};S.step=0;
+  go('landing');
+}
+
+/* ============================================================
+   HR DASHBOARD
+   ============================================================ */
+let HR_AUTH=false, HR_REMOTE=null, hrFilter={co:'',q:'',sort:'fit'};
+async function openHR(){
+  initSupa();
+  if(sb){
+    const {data:{session}} = await sb.auth.getSession();
+    if(session){ HR_AUTH=true; enterHR(); }
+    else { HR_AUTH=false; S.screen='hr'; window.scrollTo(0,0); renderHRLogin(); }
+    return;
+  }
+  // โหมดออฟไลน์: รหัสผ่านง่าย ๆ
+  if(HR_AUTH){ enterHR(); return; }
+  const pw=prompt('รหัสผ่านสำหรับ HR (โหมดออฟไลน์):');
+  if(pw===null)return;
+  if(pw===cfg().hrPassword){ HR_AUTH=true; enterHR(); } else alert('รหัสผ่านไม่ถูกต้อง');
+}
+function renderHRLogin(){
+  app().innerHTML=`
+    <button class="back" onclick="go('landing')">← กลับหน้าแรก</button>
+    <div class="card" style="max-width:420px;margin:24px auto">
+      <h2>เข้าสู่ระบบ HR</h2>
+      <p class="sub">สำหรับเจ้าหน้าที่ที่ได้รับสิทธิ์เท่านั้น</p>
+      <div class="field"><label>อีเมล</label><input id="hrEmail" type="email" placeholder="hr@company.com"></div>
+      <div class="field"><label>รหัสผ่าน</label><input id="hrPass" type="password" onkeydown="if(event.key==='Enter')hrLogin()"></div>
+      <button class="btn primary block" onclick="hrLogin()">เข้าสู่ระบบ</button>
+      <div id="hrLoginMsg" class="hint" style="margin-top:10px"></div>
+      <div class="hint" style="margin-top:14px"><a href="#" onclick="openSettings();return false;">⚙️ ตั้งค่าการเชื่อมต่อ Supabase</a></div>
+    </div>`;
+}
+async function hrLogin(){
+  const email=document.getElementById('hrEmail').value.trim();
+  const pass=document.getElementById('hrPass').value;
+  const msg=document.getElementById('hrLoginMsg');
+  if(!email||!pass){ msg.textContent='กรอกอีเมลและรหัสผ่าน'; return; }
+  msg.textContent='กำลังเข้าสู่ระบบ...';
+  const {error}=await sb.auth.signInWithPassword({email, password:pass});
+  if(error){ msg.textContent='❌ '+error.message; return; }
+  HR_AUTH=true; enterHR();
+}
+async function hrLogout(){ if(sb){ try{await sb.auth.signOut();}catch(e){} } HR_AUTH=false; HR_REMOTE=null; go('landing'); }
+function enterHR(){ S.screen='hr'; window.scrollTo(0,0); if(sb) refreshHR(); else { HR_REMOTE=null; renderHR(); } }
+// ข้อมูลผู้สมัคร: จาก Supabase ถ้าเชื่อมต่อได้ ไม่งั้นใช้ในเครื่อง
+function hrData(){ return HR_REMOTE!==null ? HR_REMOTE : loadApps(); }
+async function refreshHR(){
+  if(!sb){ HR_REMOTE=null; renderHR(); return; }
+  try{
+    const {data,error}=await sb.from('applications').select('*').order('created_at',{ascending:false});
+    if(error) throw error;
+    HR_REMOTE=(data||[]).map(rowToApp);
+  }catch(e){ HR_REMOTE=null; alert('ดึงข้อมูลจาก Supabase ไม่ได้: '+e.message); }
+  renderHR();
+}
+async function openResume(path){
+  if(!sb || !path) return;
+  const {data,error}=await sb.storage.from('resumes').createSignedUrl(path, 120);
+  if(error){ alert('เปิดไฟล์ไม่ได้: '+error.message); return; }
+  window.open(data.signedUrl,'_blank');
+}
+function renderHR(){
+  let apps=hrData().slice();
+  // filter
+  if(hrFilter.co) apps=apps.filter(a=>a.companyId===hrFilter.co);
+  if(hrFilter.q){const q=hrFilter.q.toLowerCase();
+    apps=apps.filter(a=>((a.name||'')+(a.position||'')+(a.email||'')+(a.phone||'')).toLowerCase().includes(q));}
+  // sort
+  apps.sort((x,y)=> hrFilter.sort==='fit'? (y.fit-x.fit) : (new Date(y.ts)-new Date(x.ts)));
+  const total=hrData().length;
+  const online=HR_REMOTE!==null;
+
+  app().innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <div><h1 style="margin:0">HR Dashboard</h1>
+        <p class="sub" style="margin:2px 0 0">ผู้สมัครทั้งหมด ${total} คน · ${online?'🟢 เชื่อมต่อ Supabase':'⚪ โหมดในเครื่อง'}</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${sb?`<button class="btn ghost" onclick="refreshHR()">🔄 ซิงก์</button>`:''}
+        <button class="btn ghost" onclick="openSettings()">⚙️ ตั้งค่า</button>
+        <button class="btn ghost" onclick="exportCSV()">CSV</button>
+        ${sb?`<button class="btn ghost" onclick="hrLogout()">ออกจากระบบ</button>`:`<button class="btn ghost" onclick="go('landing')">ออก</button>`}
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="toolbar">
+        <input placeholder="🔍 ค้นหา ชื่อ / ตำแหน่ง / อีเมล" value="${hrFilter.q}" oninput="hrFilter.q=this.value;renderHR()">
+        <select onchange="hrFilter.co=this.value;renderHR()">
+          <option value="">ทุกบริษัท</option>
+          ${COMPANIES.map(c=>`<option value="${c.id}" ${hrFilter.co===c.id?'selected':''}>${c.name}</option>`).join('')}
+        </select>
+        <select onchange="hrFilter.sort=this.value;renderHR()">
+          <option value="fit" ${hrFilter.sort==='fit'?'selected':''}>เรียงตาม Fit สูงสุด</option>
+          <option value="new" ${hrFilter.sort==='new'?'selected':''}>เรียงตามล่าสุด</option>
+        </select>
+      </div>
+      ${apps.length? `<div style="overflow:auto"><table>
+        <thead><tr><th>ผู้สมัคร</th><th>ตำแหน่ง</th><th>สัตว์</th><th>MBTI</th><th>Fit</th><th>วันที่</th></tr></thead>
+        <tbody>
+          ${apps.map(a=>`<tr onclick='showDetail("${a.id}")'>
+            <td><b>${a.name||'-'}</b><div class="mini">${a.phone||''}</div></td>
+            <td>${a.position}<div class="mini">${a.company}</div></td>
+            <td>${animalEmoji(a.animalKey)} ${a.animal||''}</td>
+            <td>${a.mbti||''}</td>
+            <td><span class="fitpill" style="background:${fitColor(a.fit)}22;color:${fitColor(a.fit)}">${a.fit}%</span></td>
+            <td class="mini">${fmtDate(a.ts)}</td>
+          </tr>`).join('')}
+        </tbody></table></div>`
+      : `<div class="empty">ยังไม่มีใบสมัคร${hrFilter.q||hrFilter.co?'ที่ตรงเงื่อนไข':''}</div>`}
+    </div>`;
+}
+const animalEmoji=(k)=> (ANIMALS[k]?.emoji)||'';
+function fmtDate(ts){const d=new Date(ts);return d.toLocaleDateString('th-TH',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
+
+function showDetail(id){
+  const a=hrData().find(x=>x.id===id); if(!a)return;
+  document.getElementById('modalMount').innerHTML=`
+    <div class="overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <button class="close" onclick="closeModal()">×</button>
+        <h2>${a.name}</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+          <span class="chip">${animalEmoji(a.animalKey)} ${a.animal}</span>
+          <span class="chip">MBTI ${a.mbti} · ${mbtiInfo(a.mbti).name}</span>
+          <span class="chip">${a.mindset}</span>
+          <span class="chip">${a.social}</span>
+          <span class="chip" style="background:${fitColor(a.fit)}22;color:${fitColor(a.fit)}">Fit ${a.fit}%</span>
+        </div>
+        <div class="kv">
+          <div class="k">ตำแหน่ง</div><div>${a.position} · ${a.company}</div>
+          <div class="k">เบอร์โทร</div><div>${a.phone||'-'}</div>
+          <div class="k">LINE ID</div><div>${a.line||'-'}</div>
+          <div class="k">Email</div><div>${a.email||'-'}</div>
+          <div class="k">วุฒิการศึกษา</div><div>${a.edu||'-'}</div>
+          <div class="k">เงินเดือนคาดหวัง</div><div>${a.salary||'-'}</div>
+          <div class="k">เริ่มงานได้</div><div>${a.start||'-'}</div>
+          <div class="k">Growth/Social</div><div>Growth ${a.mindsetPct}% · Extrovert ${a.socialPct}%</div>
+          <div class="k">รู้จักจาก</div><div>${a.source||'-'}</div>
+          <div class="k">Resume/CV</div><div>${a.resumePath?`<a href="#" onclick="openResume('${a.resumePath}');return false;">📎 เปิด Resume</a>`: a.resumeData?`<a href="${a.resumeData}" download="${a.resumeName}">📎 ${a.resumeName}</a>`:'-'}</div>
+        </div>
+        ${a.about?`<div style="margin-top:14px"><div class="k mini">แนะนำตัว</div><p style="margin-top:4px">${a.about}</p></div>`:''}
+        ${a.exp?`<div style="margin-top:12px"><div class="k mini">ประสบการณ์ทำงาน</div><p style="margin-top:4px">${a.exp}</p></div>`:''}
+        <div style="margin-top:20px;display:flex;gap:10px">
+          <a class="btn primary" href="tel:${a.phone}">โทรหา</a>
+          <a class="btn ghost" href="mailto:${a.email}">ส่งอีเมล</a>
+        </div>
+      </div>
+    </div>`;
+}
+function closeModal(){document.getElementById('modalMount').innerHTML='';}
+
+/* ---------- HR settings: เชื่อมต่อ Google Sheets ---------- */
+function openSettings(){
+  const c=cfg();
+  document.getElementById('modalMount').innerHTML=`
+    <div class="overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <button class="close" onclick="closeModal()">×</button>
+        <h2>เชื่อมต่อ Supabase</h2>
+        <p class="sub" style="margin-bottom:16px">วาง Project URL และ anon key (ดู SUPABASE_SETUP.md) — เว้นว่าง = โหมดในเครื่อง</p>
+        <div class="field"><label>Project URL</label>
+          <input id="cfgUrl" value="${c.supaUrl||''}" placeholder="https://xxxx.supabase.co"></div>
+        <div class="field"><label>anon / public key</label>
+          <input id="cfgKey" value="${c.supaKey||''}" placeholder="eyJhbGciOi..."></div>
+        <div class="hint">🔒 anon key เป็นค่าสาธารณะ ปลอดภัยที่จะฝังในหน้าเว็บ (ข้อมูลถูกป้องกันด้วย RLS)</div>
+        <div style="display:flex;gap:10px;margin-top:12px">
+          <button class="btn primary" onclick="saveSettings()">บันทึก</button>
+          <button class="btn ghost" onclick="testConn()">ทดสอบการเชื่อมต่อ</button>
+        </div>
+        <div id="cfgMsg" class="hint" style="margin-top:12px"></div>
+      </div>
+    </div>`;
+}
+function saveSettings(){
+  const url=document.getElementById('cfgUrl').value.trim();
+  const key=document.getElementById('cfgKey').value.trim();
+  localStorage.setItem(CFG_KEY, JSON.stringify({supaUrl:url, supaKey:key}));
+  initSupa(); closeModal(); openHR();
+}
+async function testConn(){
+  const url=document.getElementById('cfgUrl').value.trim();
+  const key=document.getElementById('cfgKey').value.trim();
+  const msg=document.getElementById('cfgMsg');
+  if(!url||!key){msg.textContent='กรอก Project URL และ anon key ให้ครบ';return;}
+  if(!window.supabase){msg.textContent='ไลบรารี Supabase ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง';return;}
+  msg.textContent='กำลังทดสอบ...';
+  try{
+    const t=window.supabase.createClient(url,key);
+    const {data,error}=await t.from('positions').select('id').eq('active',true);
+    msg.textContent = error ? ('⚠️ '+error.message)
+      : ('✅ เชื่อมต่อสำเร็จ — พบ '+(data?data.length:0)+' ตำแหน่งที่เปิดรับ');
+  }catch(e){ msg.textContent='❌ เชื่อมต่อไม่ได้: '+e.message; }
+}
+
+/* ---------- โหลดบริษัท/ตำแหน่งจาก Supabase ตอนเปิดเว็บ ---------- */
+async function init(){
+  initSupa();
+  if(sb){
+    try{
+      const [cosRes,posRes] = await Promise.all([
+        sb.from('companies').select('*').eq('active',true).order('sort'),
+        sb.from('positions').select('*').eq('active',true).order('sort')
+      ]);
+      if(cosRes.data && cosRes.data.length)
+        COMPANIES = cosRes.data.map(c=>({id:c.id,name:c.name,tagline:c.tagline,color:c.color,icon:c.icon}));
+      if(posRes.data && posRes.data.length)
+        POSITIONS = posRes.data.map(rowToPosition);
+    }catch(e){ console.warn('โหลดข้อมูลจาก Supabase ไม่ได้ ใช้ค่าเริ่มต้นแทน:',e); }
+  }
+  render();
+}
+
+function exportCSV(){
+  const apps=hrData(); if(!apps.length){alert('ยังไม่มีข้อมูล');return;}
+  const cols=['ts','company','position','name','nick','phone','line','email','edu','salary','start','source','about','exp','animal','mbti','mindset','mindsetPct','social','socialPct','fit','resumeName'];
+  const head=cols.join(',');
+  const rows=apps.map(a=>cols.map(c=>`"${String(a[c]??'').replace(/"/g,'""')}"`).join(','));
+  const csv='﻿'+[head,...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url; link.download='applications_'+new Date().toISOString().slice(0,10)+'.csv';
+  link.click(); URL.revokeObjectURL(url);
+}
+
+/* ============================================================ */
+init();
+</script>
+</body>
+</html>
