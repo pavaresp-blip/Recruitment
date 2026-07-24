@@ -253,20 +253,20 @@ const Q_WORK = [
 ];
 const LIKERT = ["ไม่เห็นด้วยมาก","ไม่เห็นด้วย","กลางๆ","เห็นด้วย","เห็นด้วยมาก"];
 const SKILLS = [
-  ["ไทย — พูด","th_speak"],["ไทย — อ่าน","th_read"],["ไทย — เขียน","th_write"],
-  ["อังกฤษ — พูด","en_speak"],["อังกฤษ — อ่าน","en_read"],["อังกฤษ — เขียน","en_write"],
-  ["Canva","canva"],["Capcut","capcut"],["Lemon8","lemon8"],
-  ["Excel","excel"],["Word","word"],["PowerPoint","ppt"],
-  ["ChatGPT","chatgpt"],["Claude","claude"],["Gemini","gemini"]
+  ["พูด","th_speak"],["อ่าน","th_read"],["เขียน","th_write"],
+  ["พูด","en_speak"],["อ่าน","en_read"],["เขียน","en_write"],
+  ["ถ่ายภาพ","photo"],["แต่งรูป","editphoto"],["ตัดต่อวีดีโอ","editvideo"],
+  ["Microsoft Excel / Word","msoffice"],["Canva","canva"],["Google Drive","gdrive"],
+  ["Chat GPT / Codex","chatgpt"],["Claude cowork / Code","claude"],["Gemini","gemini"]
 ];
 const SKILL_GROUPS = [
   ["🇹🇭 ภาษาไทย",["th_speak","th_read","th_write"]],
   ["🌐 ภาษาอังกฤษ",["en_speak","en_read","en_write"]],
-  ["🎬 คอนเทนต์ / ตัดต่อ",["canva","capcut","lemon8"]],
-  ["💻 คอมพิวเตอร์",["excel","word","ppt"]],
+  ["🎬 คอนเทนต์ / ตัดต่อ",["photo","editphoto","editvideo"]],
+  ["💻 คอมพิวเตอร์",["msoffice","canva","gdrive"]],
   ["🤖 AI",["chatgpt","claude","gemini"]]
 ];
-const SKILL_LABEL = Object.fromEntries(SKILLS);
+const SKILL_LABEL = Object.fromEntries(SKILLS.map(s=>[s[1],s[0]]));
 const SOURCES = ["","Facebook","Instagram","TikTok","LINE / กลุ่มไลน์","JobsDB / เว็บหางาน","เพื่อน/คนรู้จักแนะนำ","เดินผ่าน/ป้ายหน้าร้าน","อื่นๆ"];
 const COMMUTES = ["","รถยนต์ส่วนตัว","มอเตอร์ไซค์ส่วนตัว","รถสาธารณะ (รถเมล์/รถไฟฟ้า/ตู้)","เดิน / จักรยาน","อื่นๆ"];
 function blankSkills(){let o={};SKILLS.forEach(s=>o[s[1]]=0);return o;}
