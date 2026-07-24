@@ -3,948 +3,737 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบรับสมัครงาน + แบบทดสอบบุคลิกภาพ</title>
+<title>ร่วมงานกับเรา — สมัครงาน</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#f4f6fb; --card:#ffffff; --ink:#1a2233; --muted:#6b7488;
-  --line:#e6e9f2; --brand:#3b6cff; --brand-ink:#2450e6;
-  --bull:#ef4444; --eagle:#f59e0b; --bear:#8b5cf6; --mouse:#10b981;
-  --ok:#10b981; --warn:#f59e0b; --shadow:0 10px 30px rgba(24,39,75,.08);
-  --radius:16px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Noto Sans Thai',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
-img{max-width:100%}
-.wrap{max-width:900px;margin:0 auto;padding:20px 18px 80px}
-.topbar{position:sticky;top:0;z-index:50;background:rgba(244,246,251,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.topbar-in{max-width:900px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px;cursor:pointer}
-.logo .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--brand),#7c3aed);display:grid;place-items:center;color:#fff;font-size:15px}
-.hrlink{font-size:13px;color:var(--muted);cursor:pointer;padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--card)}
-.hrlink:hover{color:var(--brand)}
-
-h1{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
-h2{font-size:20px;font-weight:700;margin-bottom:4px}
-.sub{color:var(--muted);font-size:15px;margin-bottom:22px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
-.grid{display:grid;gap:14px}
-.hidden{display:none!important}
-
-/* company cards */
-.companies{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:8px}
-.co{cursor:pointer;border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--card);transition:.18s;position:relative;overflow:hidden}
-.co:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--brand)}
-.co .badge{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px;margin-bottom:12px}
-.co h3{font-size:17px;font-weight:700}
-.co p{color:var(--muted);font-size:13px;margin-top:2px}
-.co .go{position:absolute;right:16px;bottom:16px;color:var(--muted)}
-
-/* position list */
-.pos{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--card);cursor:pointer;transition:.15s;margin-bottom:12px}
-.pos:hover{border-color:var(--brand);box-shadow:var(--shadow)}
-.pos h3{font-size:16px}
-.pos .meta{color:var(--muted);font-size:13px;margin-top:2px}
-.tag{display:inline-block;font-size:12px;padding:3px 9px;border-radius:20px;background:#eef2ff;color:var(--brand-ink);font-weight:600;margin-right:6px}
-
-/* forms */
-label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
-.req::after{content:" *";color:var(--bull)}
-input,select,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:15px;background:#fbfcfe;color:var(--ink)}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff}
-textarea{resize:vertical;min-height:90px}
-.field{margin-bottom:16px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.hint{font-size:12px;color:var(--muted);margin-top:4px}
-.skill-row{display:grid;grid-template-columns:1fr 160px;gap:10px;align-items:center;margin-bottom:10px}
-.skill-row .rng{display:flex;align-items:center;gap:8px}
-.skill-row output{font-weight:700;min-width:26px;text-align:right;color:var(--brand)}
-
-/* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:12px;border:none;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:.15s}
-.btn.primary{background:var(--brand);color:#fff}
-.btn.primary:hover{background:var(--brand-ink)}
-.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
-.btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.btn.block{width:100%}
-.actions{display:flex;gap:12px;margin-top:24px}
-.back{background:none;border:none;color:var(--muted);cursor:pointer;font-family:inherit;font-size:14px;padding:8px 0;margin-bottom:14px;display:inline-flex;align-items:center;gap:6px}
-.back:hover{color:var(--brand)}
-
-/* progress */
-.progress{margin-bottom:22px}
-.progress .bar{height:8px;background:var(--line);border-radius:20px;overflow:hidden}
-.progress .fill{height:100%;background:linear-gradient(90deg,var(--brand),#7c3aed);border-radius:20px;transition:.3s}
-.progress .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
-
-/* quiz */
-.q{margin-bottom:8px}
-.q .num{font-size:13px;color:var(--brand);font-weight:700;margin-bottom:6px}
-.q .txt{font-size:18px;font-weight:600;margin-bottom:18px;line-height:1.45}
-.opt{border:1.5px solid var(--line);border-radius:13px;padding:15px 17px;cursor:pointer;transition:.15s;margin-bottom:11px;display:flex;align-items:center;gap:13px;background:var(--card)}
-.opt:hover{border-color:var(--brand);background:#f8faff}
-.opt.sel{border-color:var(--brand);background:#eef3ff}
-.opt .mk{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:0 0 auto;display:grid;place-items:center}
-.opt.sel .mk{border-color:var(--brand);background:var(--brand)}
-.opt.sel .mk::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
-.likert{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:6px}
-.lk{border:1.5px solid var(--line);border-radius:11px;padding:12px 4px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:.15s;background:var(--card)}
-.lk:hover{border-color:var(--brand)}
-.lk.sel{border-color:var(--brand);background:var(--brand);color:#fff}
-.lk .big{display:block;font-size:18px;font-weight:800}
-
-/* result */
-.result-hero{text-align:center;padding:30px 20px}
-.animal-badge{width:96px;height:96px;border-radius:26px;display:grid;place-items:center;font-size:48px;margin:0 auto 14px;color:#fff}
-.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
-.chip{padding:8px 16px;border-radius:30px;font-weight:700;font-size:14px;background:#eef2ff;color:var(--brand-ink)}
-.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
-.res-box{border:1px solid var(--line);border-radius:14px;padding:16px}
-.res-box .k{font-size:13px;color:var(--muted)}
-.res-box .v{font-size:22px;font-weight:800;margin-top:2px}
-.fitbar{height:10px;background:var(--line);border-radius:20px;overflow:hidden;margin-top:8px}
-.fitbar>div{height:100%;border-radius:20px}
-
-/* HR table */
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-.toolbar input,.toolbar select{width:auto;flex:1;min-width:140px}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
-th{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);cursor:pointer;white-space:nowrap}
-tbody tr{cursor:pointer}
-tbody tr:hover{background:#f8faff}
-.fitpill{font-weight:800;padding:3px 10px;border-radius:20px;font-size:13px}
-.mini{font-size:12px;color:var(--muted)}
-.empty{text-align:center;padding:50px 20px;color:var(--muted)}
-
-/* modal */
-.overlay{position:fixed;inset:0;background:rgba(16,24,45,.5);backdrop-filter:blur(3px);z-index:100;display:grid;place-items:center;padding:18px}
-.modal{background:var(--card);border-radius:20px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:26px;box-shadow:var(--shadow)}
-.modal h2{margin-bottom:14px}
-.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 14px;font-size:14px}
-.kv .k{color:var(--muted)}
-.close{float:right;cursor:pointer;color:var(--muted);font-size:22px;line-height:1;border:none;background:none}
-
-.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-@media(max-width:600px){
-  .row,.row3,.res-grid{grid-template-columns:1fr}
-  h1{font-size:22px}
-  .likert{gap:5px}.lk{padding:10px 2px;font-size:12px}
-}
-.notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:12px 14px;border-radius:12px;font-size:13px;margin-top:16px}
-</style>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#f4f6fb; --bg2:#eef1f8;
+    --panel:#ffffff; --panel2:#ffffff;
+    --glass:#ffffff; --line:#e7eaf3; --line2:#d6dbe9;
+    --txt:#1a2233; --muted:#68718a; --faint:#98a1b6;
+    --brand:#3b6cff; --brand2:#7c3aed; --mint:#5b8cff;
+    --ok:#10b981; --warn:#f59e0b; --bad:#ef4444; --chip:#eef2ff;
+    --radius:22px;
+    --shadow:0 14px 36px -16px rgba(24,39,75,.20);
+    --glow:0 8px 22px -8px rgba(59,108,255,.5);
+    --font:'Anuphan',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --disp:'Sora','Anuphan',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--font); color:var(--txt); line-height:1.6; min-height:100vh;
+    background:var(--bg); -webkit-font-smoothing:antialiased; letter-spacing:.1px;
+    position:relative; overflow-x:hidden;
+  }
+  body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background:
+      radial-gradient(680px 460px at 82% -8%, rgba(124,58,237,.10), transparent 60%),
+      radial-gradient(720px 520px at 8% 4%, rgba(59,108,255,.10), transparent 55%),
+      linear-gradient(180deg,#f7f9fd,var(--bg));}
+  .wrap{max-width:520px;margin:0 auto;padding:22px 16px 96px}
+  .hrwrap{max-width:1180px}
+  h1,h2,h3{line-height:1.24;margin:0 0 .4em;letter-spacing:-.3px}
+  h1{font-size:1.72rem;font-weight:700}
+  h2{font-size:1.3rem;font-weight:700}
+  p{margin:.3em 0}
+  .muted{color:var(--muted)}
+  .center{text-align:center}
+  ::selection{background:rgba(59,108,255,.18)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.2px;font-size:1.02rem}
+  .logo .dot{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-size:1.1rem;box-shadow:var(--glow);color:#fff}
+  .ghost{background:#fff;border:1px solid var(--line);color:var(--muted);padding:9px 15px;border-radius:12px;cursor:pointer;font-size:.84rem;font-family:inherit;transition:.18s}
+  .ghost:hover{color:var(--brand);border-color:var(--line2);transform:translateY(-1px)}
+  .progress{height:7px;background:#e7eaf3;border-radius:99px;overflow:hidden;margin:0 0 18px;border:1px solid var(--line)}
+  .progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .5s cubic-bezier(.4,0,.2,1)}
+  .steps{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;font-size:.74rem}
+  .steps span{padding:5px 11px;border-radius:99px;background:var(--chip);color:var(--muted);border:1px solid var(--line)}
+  .steps span.on{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;font-weight:600}
+  .steps span.done{background:rgba(16,185,129,.1);color:var(--ok);border-color:rgba(16,185,129,.3)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px 24px;box-shadow:var(--shadow);margin-bottom:18px;animation:pop .5s cubic-bezier(.2,.7,.2,1) both;position:relative;overflow:hidden}
+  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.99)}to{opacity:1;transform:none}}
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  .co{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:18px;padding:16px;transition:.22s cubic-bezier(.2,.7,.2,1);display:flex;gap:14px;align-items:center;animation:pop .5s both}
+  .co:hover{border-color:var(--brand);transform:translateY(-3px);box-shadow:var(--shadow)}
+  .co:active{transform:scale(.99)}
+  .co .ic{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;font-size:1.45rem;flex:0 0 auto;color:#fff}
+  .co b{display:block;font-weight:600;font-size:1.02rem}
+  .co small{color:var(--muted);font-size:.85rem}
+  .co .arr{margin-left:auto;color:var(--faint);font-size:1.3rem;transition:.2s}
+  .co:hover .arr{color:var(--brand);transform:translateX(3px)}
+  label.f{display:block;margin:16px 0 7px;font-weight:600;font-size:.9rem;color:#3a4256}
+  label.f .req{color:var(--brand)}
+  input,select,textarea{
+    width:100%;background:#fbfcfe;border:1.5px solid var(--line);color:var(--txt);
+    border-radius:14px;padding:13px 15px;font-size:.95rem;font-family:inherit;outline:none;transition:.18s
+  }
+  input::placeholder,textarea::placeholder{color:var(--faint)}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%2368718a' stroke-width='2'%3E%3Cpath d='M3 5l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+  input:focus,select:focus,textarea:focus{border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(59,108,255,.12)}
+  textarea{min-height:92px;resize:vertical;line-height:1.6}
+  input[type=file]{padding:10px;font-size:.86rem}
+  .hint{font-size:.79rem;color:var(--faint);margin-top:6px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.row2{grid-template-columns:1fr}}
+  .btn{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border:none;padding:14px 26px;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;transition:.18s cubic-bezier(.2,.7,.2,1);font-family:inherit;box-shadow:var(--glow);letter-spacing:.2px}
+  .btn:hover{filter:brightness(1.05);transform:translateY(-2px)}
+  .btn:active{transform:translateY(0) scale(.99)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn.sec{background:#fff;border:1px solid var(--line2);color:var(--txt);box-shadow:none}
+  .btn.sec:hover{background:#f4f6fb;box-shadow:none}
+  .navbtns{display:flex;justify-content:space-between;gap:12px;margin-top:26px}
+  .q{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+  .q:last-child{border-bottom:none}
+  .q .qt{font-weight:600;margin-bottom:12px;font-size:1.02rem}
+  .q .qt .n{font-family:var(--disp);color:var(--brand);font-weight:800;margin-right:8px}
+  .opt{display:flex;align-items:center;gap:13px;border:1.5px solid var(--line);background:#fbfcfe;border-radius:15px;padding:14px 15px;margin:9px 0;cursor:pointer;transition:.18s}
+  .opt:hover{border-color:var(--line2);background:#f4f6fb}
+  .opt.sel{border-color:var(--brand);background:rgba(59,108,255,.08);box-shadow:0 0 0 3px rgba(59,108,255,.12)}
+  .opt .bx{width:22px;height:22px;border-radius:50%;border:2px solid var(--faint);flex:0 0 auto;display:grid;place-items:center;transition:.18s}
+  .opt.sel .bx{border-color:var(--brand)}
+  .opt.sel .bx::after{content:"";width:11px;height:11px;border-radius:50%;background:var(--brand)}
+  .likert{display:flex;gap:7px;flex-wrap:wrap}
+  .likert button{flex:1;min-width:56px;background:#fbfcfe;border:1.5px solid var(--line);color:var(--muted);border-radius:12px;padding:11px 4px;cursor:pointer;font-size:.76rem;transition:.16s;font-family:inherit}
+  .likert button.sel{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;font-weight:600}
+  .likert button:hover{border-color:var(--line2);transform:translateY(-1px)}
+  .lkrow{display:flex;justify-content:space-between;font-size:.72rem;color:var(--faint);margin-top:6px}
+  .badge{display:inline-block;padding:7px 16px;border-radius:99px;font-weight:600;font-size:.88rem;border:1px solid var(--line)}
+  .res-hero{text-align:center;padding:14px 0 6px}
+  .res-emoji{font-size:3.6rem;animation:float 3s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .bar{height:11px;background:#e7eaf3;border-radius:99px;overflow:hidden;margin:7px 0;border:1px solid var(--line)}
+  .bar>i{display:block;height:100%;border-radius:99px;transition:width .8s cubic-bezier(.3,.8,.3,1)}
+  .restile{background:#f8faff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0}
+  .restile h3{margin:0 0 6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:1.06rem}
+  .restile p{margin:.4em 0}
+  .tag{font-family:var(--font);font-size:.72rem;padding:4px 11px;border-radius:99px;background:rgba(59,108,255,.1);color:var(--brand);font-weight:600}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  th,td{text-align:left;padding:12px 12px;border-bottom:1px solid var(--line)}
+  th{color:var(--faint);font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:.5px}
+  tr.rowclick{cursor:pointer;transition:.15s}
+  tr.rowclick:hover{background:#f4f6fb}
+  .pill{font-family:var(--disp);font-size:.78rem;padding:4px 11px;border-radius:99px;font-weight:700}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .toolbar input,.toolbar select{width:auto}
+  .stat{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .statc{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px;flex:1;min-width:120px;box-shadow:var(--shadow)}
+  .statc b{font-family:var(--disp);font-size:1.9rem;display:block;font-weight:800;letter-spacing:-1px}
+  .empty{text-align:center;padding:60px 20px;color:var(--muted)}
+  .detail{background:#f8faff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:8px}
+  .kv{display:grid;grid-template-columns:160px 1fr;gap:7px 14px;font-size:.88rem}
+  .kv div:nth-child(odd){color:var(--muted)}
+  @media(max-width:560px){.kv{grid-template-columns:1fr}.kv div:nth-child(odd){margin-top:8px}}
+  .flag{color:var(--bad);font-weight:700}
+  .save-note{font-size:.85rem;padding:12px 15px;border-radius:13px;margin-top:14px}
+  .save-ok{background:rgba(16,185,129,.1);color:#0a7f5c;border:1px solid rgba(16,185,129,.3)}
+  .save-warn{background:rgba(245,158,11,.12);color:#9a6a00;border:1px solid rgba(245,158,11,.35)}
+  .hide{display:none!important}
+  a{color:var(--brand)}
+  .sec-h{margin:28px 0 4px;padding-top:22px;border-top:1px solid var(--line);font-size:1.04rem;font-weight:700;display:flex;align-items:center;gap:9px}
+  .sec-h .ic2{font-size:1.15rem}
+  .rowblock{background:#f8faff;border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;position:relative}
+  .rowblock .del{position:absolute;top:11px;right:11px;background:#fff;border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-family:inherit}
+  .rowblock .del:hover{color:var(--bad);border-color:var(--bad)}
+  .addbtn{background:#fff;border:1.5px dashed var(--line2);color:var(--brand);padding:12px;border-radius:14px;width:100%;cursor:pointer;font-size:.9rem;font-family:inherit;margin-top:4px;transition:.18s}
+  .addbtn:hover{border-color:var(--brand);background:rgba(59,108,255,.05)}
+  .skgrp{margin:8px 0}
+  .skgrp .glab{font-size:.85rem;color:var(--muted);margin:12px 0 6px;font-weight:600}
+  .skill{display:flex;align-items:center;gap:13px;padding:6px 0}
+  .skill>span{flex:0 0 112px;font-size:.86rem}
+  .skill input[type=range]{flex:1;accent-color:var(--brand);height:5px;padding:0}
+  .skill>b{font-family:var(--disp);flex:0 0 28px;text-align:center;color:var(--brand);font-weight:700}
+  .consent{display:flex;gap:11px;align-items:flex-start;margin:13px 0;font-size:.89rem;cursor:pointer;line-height:1.5}
+  .consent input{width:19px;height:19px;flex:0 0 auto;margin-top:2px;accent-color:var(--brand)}
+  .pdpa-box{background:#f8faff;border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-size:.83rem;color:var(--muted);margin:10px 0;line-height:1.6}
+  pre.wh{white-space:pre-wrap;font-family:var(--font);margin:5px 0 0;background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px;font-size:.86rem;line-height:1.6}
+  .capnote{background:linear-gradient(135deg,rgba(59,108,255,.1),rgba(124,58,237,.08));border:1px solid rgba(59,108,255,.3);color:#2a3550;border-radius:16px;padding:15px 17px;margin:16px 0;font-size:.92rem;line-height:1.6}
+  .capnote b{color:var(--brand)}
+</style>
 </head>
 <body>
-
-<div class="topbar">
-  <div class="topbar-in">
-    <div class="logo" onclick="go('landing')"><span class="dot">✦</span> Talent&nbsp;Match</div>
-    <div class="hrlink" onclick="openHR()">👤 สำหรับ HR</div>
-  </div>
-</div>
-
-<div class="wrap" id="app"></div>
-
-<!-- modal mount -->
-<div id="modalMount"></div>
+<div class="wrap" id="root"></div>
 
 <script>
 /* ============================================================
-   CONFIG — แก้ตรงนี้ได้ (บริษัท / รหัส HR / Google Sheets URL)
-   ============================================================ */
+   CONFIG — Supabase (ฝังค่าไว้แล้ว) / HR ล็อกอินด้วย Supabase Auth
+============================================================ */
 const CONFIG = {
-  // ค่าเริ่มต้น — HR วาง Project URL + anon key ได้จาก "สำหรับ HR ▸ ⚙️ ตั้งค่า" (เก็บใน localStorage)
-  supaUrl: "https://lixhcanbovjehwlrulgt.supabase.co",           // โปรเจกต์ Recruitment
-  supaKey: "sb_publishable_j2HzZDBbbBYrJVTCsX6yfA_4dqAD7Du",     // publishable key (ค่าสาธารณะ ปลอดภัยที่จะฝัง — ข้อมูลคุมด้วย RLS)
-  hrPassword: "hachi2026",  // ใช้เฉพาะโหมดออฟไลน์ (เมื่อยังไม่ได้ตั้ง Supabase)
+  supaUrl: "https://lixhcanbovjehwlrulgt.supabase.co",
+  supaKey: "sb_publishable_j2HzZDBbbBYrJVTCsX6yfA_4dqAD7Du",
+  HR_PASSCODE: "hr2026"   // ใช้เฉพาะโหมดออฟไลน์ (เมื่อยังไม่ได้ตั้ง Supabase)
 };
 const CFG_KEY='recruit_config';
-function cfg(){ return Object.assign({}, CONFIG, JSON.parse(localStorage.getItem(CFG_KEY)||'{}')); }
-
-// ---------- Supabase client ----------
+function cfg(){ return Object.assign({},CONFIG,JSON.parse(localStorage.getItem(CFG_KEY)||'{}')); }
 let sb=null;
 function initSupa(){
   const c=cfg();
-  try{ sb = (c.supaUrl && c.supaKey && window.supabase) ? window.supabase.createClient(c.supaUrl, c.supaKey) : null; }
-  catch(e){ console.warn('สร้าง Supabase client ไม่ได้:',e); sb=null; }
+  try{ sb=(c.supaUrl&&c.supaKey&&window.supabase)?window.supabase.createClient(c.supaUrl,c.supaKey):null; }
+  catch(e){ console.warn('supabase init failed',e); sb=null; }
   return sb;
 }
-// แปลงข้อมูลระหว่างรูปแบบแอป <-> คอลัมน์ในตาราง
-function rowToPosition(p){ return {id:p.id, co:p.company_id, title:p.title, dept:p.dept, type:p.type, desc:p.description,
-  target:{animal:p.target_animal, mbti:p.target_mbti, mindset:p.target_mindset||'any', social:p.target_social||'any'}}; }
-function recToRow(r){ return {id:r.id, company_id:r.companyId, company:r.company, position_id:r.positionId, position:r.position,
-  name:r.name, nick:r.nick, phone:r.phone, line_id:r.line, email:r.email, edu:r.edu, about:r.about, experience:r.exp,
-  salary:r.salary, start_date:r.start||null, source:r.source, animal_key:r.animalKey, animal:r.animal, mbti:r.mbti,
-  mindset:r.mindset, mindset_pct:r.mindsetPct, social:r.social, social_pct:r.socialPct, fit:r.fit,
-  resume_name:r.resumeName||null, resume_path:r.resumePath||null}; }
-function rowToApp(r){ return {id:r.id, ts:r.created_at, companyId:r.company_id, company:r.company, positionId:r.position_id,
-  position:r.position, name:r.name, nick:r.nick, phone:r.phone, line:r.line_id, email:r.email, edu:r.edu, about:r.about,
-  exp:r.experience, salary:r.salary, start:r.start_date, source:r.source, animalKey:r.animal_key, animal:r.animal,
-  mbti:r.mbti, mindset:r.mindset, mindsetPct:r.mindset_pct, social:r.social, socialPct:r.social_pct, fit:r.fit,
-  resumeName:r.resume_name, resumePath:r.resume_path}; }
-function dataUrlToBlob(dataUrl){
-  const m=dataUrl.match(/^data:([^;]+);base64,(.*)$/); if(!m)return null;
-  const bin=atob(m[2]); const arr=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
-  return new Blob([arr],{type:m[1]});
-}
+function dataUrlToBlob(u){const m=u.match(/^data:([^;]+);base64,(.*)$/);if(!m)return null;const b=atob(m[2]);const a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Blob([a],{type:m[1]});}
 
-let COMPANIES = [
-  {id:'hachi',   name:'Hachi Dental Clinic', tagline:'คลินิกทันตกรรม',        color:'#00a3a3', icon:'H'},
-  {id:'sunway',  name:'SUPERSUNWAY',         tagline:'มาร์เก็ตติ้ง / มีเดีย',  color:'#f43f5e', icon:'S'},
-  {id:'b2b',     name:'B2B4Dent',            tagline:'จัดจำหน่ายวัสดุทันตกรรม', color:'#3b6cff', icon:'B'},
+/* ---------- COMPANIES ---------- */
+const COMPANIES = [
+  {id:"twm",  name:"Twowheelmania",       sub:"ร้านแต่ง/ซ่อม Harley-Davidson", color:"#ff7a45", ic:"🏍️"},
+  {id:"ssw",  name:"Supersunway",         sub:"ชิปปิ้งนำเข้า จีน-ไทย",          color:"#f59e0b", ic:"🚢"},
+  {id:"b2b",  name:"B2B4Dent",            sub:"วัสดุ/อุปกรณ์ทันตกรรม",          color:"#14b8a6", ic:"🦷"},
+  {id:"hachi",name:"Hachi Dental Clinic", sub:"คลินิกทันตกรรม",                color:"#3b6cff", ic:"✨"},
+  {id:"bvl",  name:"Bangkok Veneer Lab",  sub:"แล็บเซรามิกทันตกรรม",            color:"#7c3aed", ic:"🔬"},
+  {id:"other",name:"อื่นๆ",               sub:"ไม่มีในตัวเลือก / ระบุเอง",      color:"#8b93a7", ic:"➕"}
 ];
+const POS_BY_CO = {
+  twm:  "ตัวอย่าง: ช่างซ่อม, ที่ปรึกษาการขาย (เซลส์), แอดมินเพจ/ออนไลน์, สต็อก/อะไหล่, ผู้จัดการร้าน",
+  ssw:  "ตัวอย่าง: เจ้าหน้าที่ชิปปิ้ง/นำเข้า, ประสานงานจีน, เซลส์, บัญชี/การเงิน, คลังสินค้า/แพ็คของ",
+  b2b:  "ตัวอย่าง: เซลส์ขายอุปกรณ์ทันตกรรม, แอดมิน/คีย์ออร์เดอร์, คลัง/จัดส่ง, การตลาด/คอนเทนต์",
+  hachi:"ตัวอย่าง: ผู้ช่วยทันตแพทย์, ทันตแพทย์, แอดมิน/เคาน์เตอร์, ผู้จัดการคลินิก, การตลาด/คอนเทนต์",
+  bvl:  "ตัวอย่าง: ช่างทันตกรรม (เทคนิเชียน), ช่างเซรามิก/วีเนียร์, QC/ตรวจงาน, แอดมิน/ประสานงานแล็บ",
+  other:"พิมพ์ตำแหน่งที่อยากสมัครได้เลย"
+};
 
-/* ตำแหน่งงาน (ค่าเริ่มต้น) — จริง ๆ HR แก้ผ่าน Google Sheets ได้
-   target = โปรไฟล์ที่เหมาะกับตำแหน่ง ใช้คิด fit score
-   animal: bull|eagle|bear|mouse | mbti: ตัวอักษรที่อยากได้ | mindset:growth|any | social:extrovert|introvert|any */
-let POSITIONS = [
-  {id:'p1', co:'hachi', title:'ผู้จัดการสาขา',      dept:'บริหาร',  type:'ประจำ',  desc:'บริหารทีม วางแผน คุมมาตรฐานบริการ ประสานแพทย์–ลูกค้า (ประสบการณ์ผู้จัดการ 1–2 ปี)',
-    target:{animal:'bull', mbti:'ENTJ', mindset:'growth', social:'extrovert'}},
-  {id:'p2', co:'hachi', title:'เคาน์เตอร์ & แอดมิน', dept:'หน้าร้าน', type:'ประจำ', desc:'ต้อนรับ นัดหมาย ดูแลคิว งานขาย ตอบแชท (ใกล้ BTS แบริ่ง)',
-    target:{animal:'eagle', mbti:'ESFP', mindset:'growth', social:'extrovert'}},
-  {id:'p2b',co:'hachi', title:'ผู้ช่วยทันตแพทย์',    dept:'คลินิก',  type:'ประจำ', desc:'เน้นงานทันตกรรมสวยงาม วีเนียร์ ฟอกสีฟัน รากเทียม (ประสบการณ์ 1 ปีขึ้นไป)',
-    target:{animal:'bear', mbti:'ESFJ', mindset:'growth', social:'extrovert'}},
-  {id:'p3', co:'sunway', title:'Content Creator / ตัดต่อ', dept:'ครีเอทีฟ', type:'ประจำ', desc:'ถ่าย ตัดต่อวิดีโอสั้น ทำคอนเทนต์ลงโซเชียล',
-    target:{animal:'eagle', mbti:'ENFP', mindset:'growth', social:'extrovert'}},
-  {id:'p4', co:'sunway', title:'Performance Marketing', dept:'มีเดีย',  type:'ประจำ', desc:'ยิงแอด วิเคราะห์ตัวเลข ปรับแคมเปญ',
-    target:{animal:'mouse', mbti:'INTJ', mindset:'growth', social:'any'}},
-  {id:'p5', co:'b2b',    title:'พนักงานขาย (Sales)',    dept:'ขาย',     type:'ประจำ', desc:'ดูแลลูกค้าคลินิก เสนอสินค้า ปิดการขาย',
-    target:{animal:'bull', mbti:'ENTJ', mindset:'growth', social:'extrovert'}},
-  {id:'p6', co:'b2b',    title:'ธุรการ / คลังสินค้า',    dept:'ปฏิบัติการ', type:'ประจำ', desc:'จัดการสต็อก เอกสาร ประสานงานจัดส่ง',
-    target:{animal:'mouse', mbti:'ISTJ', mindset:'any', social:'introvert'}},
-];
-
-/* ============================================================
-   แบบทดสอบ
-   ============================================================ */
-
-// 1) สัตว์ 4 ทิศ — กระทิง(D) อินทรี(I) หมี(S) หนู(C)
+/* ============================================================ TEST DATA ============================================================ */
 const ANIMALS = {
-  bull:  {name:'กระทิง', emoji:'🐃', color:'var(--bull)',  disc:'D — ความเป็นผู้นำ (Dominance)',
-    desc:'ผู้นำ มุ่งเป้า ตัดสินใจเร็ว กล้าลุย ชอบความท้าทาย',
-    traits:['กล้าตัดสินใจ','มุ่งผลลัพธ์','ชอบความท้าทาย','เป็นผู้นำโดยธรรมชาติ'],
-    roles:['ผู้จัดการ / หัวหน้าทีม','งานขาย ปิดการขาย','งานที่ต้องตัดสินใจเร็ว'],
-    watch:'อาจใจร้อน มองข้ามรายละเอียดหรือความรู้สึกของคนอื่น'},
-  eagle: {name:'อินทรี', emoji:'🦅', color:'var(--eagle)', disc:'I — การโน้มน้าว (Influence)',
-    desc:'มองภาพใหญ่ ช่างจูงใจ เข้าสังคมเก่ง มีวิสัยทัศน์',
-    traits:['เข้าสังคมเก่ง','ช่างจูงใจ','มีพลังบวก','คิดสร้างสรรค์'],
-    roles:['งานลูกค้าสัมพันธ์ / ต้อนรับ','การตลาด คอนเทนต์','งานที่ต้องสื่อสารกับคน'],
-    watch:'อาจไม่เก่งงานละเอียด หรือเบื่อง่ายกับงานซ้ำ ๆ'},
-  bear:  {name:'หมี',   emoji:'🐻', color:'var(--bear)',  disc:'S — ความมั่นคง (Steadiness)',
-    desc:'ใจเย็น เป็นทีมเวิร์ก อบอุ่น ซื่อสัตย์ ประนีประนอม',
-    traits:['ใจเย็น น่าไว้ใจ','เป็นทีมเวิร์ก','อดทน สม่ำเสมอ','รับฟังคนอื่น'],
-    roles:['ผู้ช่วย / งานบริการดูแล','งานที่ต้องความต่อเนื่อง','ประสานงานภายในทีม'],
-    watch:'อาจไม่ชอบการเปลี่ยนแปลงกะทันหัน และเกรงใจจนไม่กล้าปฏิเสธ'},
-  mouse: {name:'หนู',   emoji:'🐭', color:'var(--mouse)', disc:'C — ความรอบคอบ (Conscientiousness)',
-    desc:'ละเอียด รอบคอบ วิเคราะห์เก่ง ทำตามระบบ เน้นคุณภาพ',
-    traits:['ละเอียดรอบคอบ','วิเคราะห์เก่ง','ทำตามระบบ','เน้นคุณภาพงาน'],
-    roles:['บัญชี / ธุรการ / คลัง','งานที่ต้องความแม่นยำ','วิเคราะห์ข้อมูล'],
-    watch:'อาจตัดสินใจช้าเพราะต้องการข้อมูลครบ และเครียดกับความไม่สมบูรณ์'},
+  bull:  {key:"bull",  name:"กระทิง",  emoji:"🐂", color:"#ef4444", title:"ผู้นำลุยงาน (Dominance)", desc:"เด็ดขาด มุ่งผลลัพธ์ กล้าตัดสินใจ ชอบความท้าทาย ตรงไปตรงมา"},
+  eagle: {key:"eagle", name:"อินทรี",  emoji:"🦅", color:"#f59e0b", title:"นักคิดวิสัยทัศน์ (Influence)", desc:"มองภาพใหญ่ ครีเอทีฟ ช่างพูด สร้างแรงบันดาลใจ ชอบสิ่งใหม่"},
+  mouse: {key:"mouse", name:"หนู",     emoji:"🐭", color:"#3b6cff", title:"นักวางแผนละเอียด (Conscientious)", desc:"รอบคอบ เป็นระบบ ใส่ใจรายละเอียด แม่นยำ ทำตามขั้นตอน"},
+  bear:  {key:"bear",  name:"หมี",     emoji:"🐻", color:"#10b981", title:"ผู้ประสานใจคน (Steadiness)", desc:"อบอุ่น ใจเย็น ประนีประนอม ดูแลทีม น่าเชื่อถือ ทำงานสม่ำเสมอ"}
 };
-
-// คำอธิบาย 16 บุคลิกภาพ (MBTI) — ชื่อไทยตาม 16personalities
-const MBTI_TYPES = {
-  INTJ:{name:'สถาปนิก (Architect)',  desc:'นักวางแผนเชิงกลยุทธ์ คิดเป็นระบบ มองระยะยาว ทำงานอิสระได้ดี',        roles:'วางแผน กลยุทธ์ วิเคราะห์'},
-  INTP:{name:'นักตรรกะ (Logician)',  desc:'ช่างคิด ช่างสงสัย ชอบแก้ปัญหาเชิงเหตุผลและไอเดียใหม่ ๆ',            roles:'วิจัย พัฒนา ระบบ'},
-  ENTJ:{name:'ผู้บัญชาการ (Commander)', desc:'ผู้นำโดยธรรมชาติ เด็ดขาด มุ่งเป้า จัดการทีมและงานให้ถึงเป้าได้',    roles:'ผู้บริหาร หัวหน้าทีม'},
-  ENTP:{name:'นักโต้วาที (Debater)', desc:'ไอเดียเยอะ ยืดหยุ่น ชอบความท้าทายและถกเถียงเพื่อหาทางที่ดีกว่า',       roles:'การตลาด กลยุทธ์ พัฒนาธุรกิจ'},
-  INFJ:{name:'ผู้สนับสนุน (Advocate)', desc:'มีอุดมการณ์ เข้าใจคนลึกซึ้ง ทำงานเพื่อเป้าหมายที่มีความหมาย',        roles:'HR ที่ปรึกษา งานดูแลคน'},
-  INFP:{name:'ผู้ไกล่เกลี่ย (Mediator)', desc:'อ่อนโยน มีจินตนาการ ยึดคุณค่าภายใน ใส่ใจความรู้สึก',              roles:'คอนเทนต์ ครีเอทีฟ งานดูแล'},
-  ENFJ:{name:'ผู้นำเสน่ห์ (Protagonist)', desc:'สร้างแรงบันดาลใจ เข้ากับคนง่าย ดึงศักยภาพทีมออกมาได้',           roles:'หัวหน้าทีม เทรนเนอร์ ลูกค้าสัมพันธ์'},
-  ENFP:{name:'นักรณรงค์ (Campaigner)', desc:'มีพลัง กระตือรือร้น คิดบวก ชอบเชื่อมโยงผู้คนและไอเดีย',             roles:'การตลาด คอนเทนต์ งานลูกค้า'},
-  ISTJ:{name:'ผู้พิทักษ์ (Logistician)', desc:'น่าเชื่อถือ มีวินัย ทำตามขั้นตอน รับผิดชอบสูง',                   roles:'บัญชี ธุรการ คลังสินค้า'},
-  ISFJ:{name:'ผู้ปกป้อง (Defender)', desc:'ใส่ใจ อบอุ่น ทุ่มเทดูแลผู้อื่น ละเอียดและเชื่อถือได้',               roles:'ผู้ช่วย บริการ ดูแลลูกค้า'},
-  ESTJ:{name:'ผู้บริหาร (Executive)', desc:'จัดระเบียบเก่ง เด็ดขาด บริหารงาน/คนตามระบบได้อย่างมีประสิทธิภาพ',      roles:'ผู้จัดการ หัวหน้าปฏิบัติการ'},
-  ESFJ:{name:'กงสุล (Consul)',       desc:'ใจดี ชอบช่วยเหลือ เข้าสังคมเก่ง ใส่ใจความสุขของทีมและลูกค้า',         roles:'ต้อนรับ บริการ ผู้ช่วย'},
-  ISTP:{name:'นักปฏิบัติ (Virtuoso)', desc:'มือทำ แก้ปัญหาเฉพาะหน้าเก่ง ชอบงานที่จับต้องได้',                   roles:'ช่างเทคนิค งานภาคปฏิบัติ'},
-  ISFP:{name:'นักผจญภัย (Adventurer)', desc:'มีสุนทรียะ อ่อนโยน ยืดหยุ่น ทำงานสร้างสรรค์ได้ดี',                roles:'ดีไซน์ กราฟิก งานสร้างสรรค์'},
-  ESTP:{name:'ผู้ประกอบการ (Entrepreneur)', desc:'คล่องแคล่ว กล้าเสี่ยง ชอบลงมือทำ เก่งงานที่ต้องตัดสินใจไว',    roles:'งานขาย ภาคสนาม อีเวนต์'},
-  ESFP:{name:'ผู้ให้ความบันเทิง (Entertainer)', desc:'สนุกสนาน มีชีวิตชีวา เข้ากับคนง่าย เก่งงานหน้าร้าน/บริการ',  roles:'หน้าร้าน บริการ อีเวนต์'},
-};
-const mbtiInfo=(t)=> MBTI_TYPES[t] || {name:t, desc:'', roles:''};
-const ANIMAL_Q = [
-  {t:'เวลาเจอปัญหาใหม่ ๆ คุณมักจะ...', o:[
-    {a:'bull',  t:'ลุยแก้ทันที ตัดสินใจเร็ว'},
-    {a:'eagle', t:'ชวนคนอื่นระดมสมองหาไอเดีย'},
-    {a:'bear',  t:'ค่อย ๆ ดูสถานการณ์ ไม่รีบ'},
-    {a:'mouse', t:'หาข้อมูล วิเคราะห์ให้รอบด้านก่อน'}]},
-  {t:'ในการทำงานเป็นทีม คุณมักเป็นคนที่...', o:[
-    {a:'bull',  t:'นำทีม กำหนดทิศทาง'},
-    {a:'eagle', t:'สร้างบรรยากาศ กระตุ้นทีม'},
-    {a:'bear',  t:'ประสานงาน ทำให้ทุกคนโอเค'},
-    {a:'mouse', t:'ดูรายละเอียด เช็กความถูกต้อง'}]},
-  {t:'สิ่งที่ทำให้คุณรู้สึกภูมิใจในงานคือ...', o:[
-    {a:'bull',  t:'ทำเป้าสำเร็จ ชนะความท้าทาย'},
-    {a:'eagle', t:'ได้รับการยอมรับ เป็นที่ชื่นชอบ'},
-    {a:'bear',  t:'ทีมมีความสุข ไม่มีความขัดแย้ง'},
-    {a:'mouse', t:'งานออกมาเป๊ะ ไร้ที่ติ'}]},
-  {t:'เวลาตัดสินใจ คุณให้น้ำหนักกับ...', o:[
-    {a:'bull',  t:'ผลลัพธ์และความเร็ว'},
-    {a:'eagle', t:'ความรู้สึกและภาพรวม'},
-    {a:'bear',  t:'ผลกระทบต่อคนอื่น'},
-    {a:'mouse', t:'ข้อมูลและเหตุผล'}]},
-  {t:'สไตล์การสื่อสารของคุณคือ...', o:[
-    {a:'bull',  t:'ตรงประเด็น สั้น กระชับ'},
-    {a:'eagle', t:'มีชีวิตชีวา ชวนคุยสนุก'},
-    {a:'bear',  t:'นุ่มนวล รับฟังเยอะ'},
-    {a:'mouse', t:'มีข้อมูลรองรับ ชัดเจน'}]},
-  {t:'สิ่งที่คุณกลัวที่สุดในการทำงานคือ...', o:[
-    {a:'bull',  t:'เสียเวลา ไม่มีความคืบหน้า'},
-    {a:'eagle', t:'ถูกมองข้าม ไม่มีตัวตน'},
-    {a:'bear',  t:'ความขัดแย้ง การเปลี่ยนแปลงกะทันหัน'},
-    {a:'mouse', t:'ทำผิดพลาด งานไม่เรียบร้อย'}]},
-  {t:'โต๊ะทำงาน/พื้นที่ของคุณมักจะ...', o:[
-    {a:'bull',  t:'เท่าที่จำเป็น เน้นใช้งาน'},
-    {a:'eagle', t:'มีของที่ชอบ สีสัน โชว์ตัวตน'},
-    {a:'bear',  t:'อบอุ่น มีของคนที่รัก'},
-    {a:'mouse', t:'เป็นระเบียบ จัดหมวดหมู่'}]},
-  {t:'เวลามีงานด่วนเข้ามา คุณ...', o:[
-    {a:'bull',  t:'จัดการเลย ลุยก่อน'},
-    {a:'eagle', t:'ดึงคนมาช่วย กระจายงาน'},
-    {a:'bear',  t:'ทำอย่างใจเย็น ทีละอย่าง'},
-    {a:'mouse', t:'วางแผนขั้นตอนก่อนเริ่ม'}]},
-  {t:'คำชมที่คุณอยากได้ยินคือ...', o:[
-    {a:'bull',  t:'"เก่ง ทำสำเร็จได้จริง"'},
-    {a:'eagle', t:'"สนุก อยู่ด้วยแล้วมีพลัง"'},
-    {a:'bear',  t:'"ใจดี ไว้ใจได้"'},
-    {a:'mouse', t:'"ละเอียด เชื่อถือได้"'}]},
-  {t:'เป้าหมายในการทำงานของคุณคือ...', o:[
-    {a:'bull',  t:'เติบโต ก้าวหน้า มีอำนาจตัดสินใจ'},
-    {a:'eagle', t:'ได้ทำสิ่งใหม่ ๆ มีอิสระ'},
-    {a:'bear',  t:'มั่นคง ทีมดี บรรยากาศดี'},
-    {a:'mouse', t:'เชี่ยวชาญ ทำงานมีคุณภาพ'}]},
+const Q_ANIMAL = [
+  ["เวลาทำงานเป็นทีม คุณมักเป็นคนแบบไหน",{bull:"คนที่ผลักดันให้งานเดินหน้าและเสร็จ"},{eagle:"คนที่เสนอไอเดียใหม่ๆ"},{mouse:"คนที่วางแผนและจัดระเบียบ"},{bear:"คนที่ประสานและดูแลบรรยากาศ"}],
+  ["เจอปัญหาเฉพาะหน้า คุณ",{bull:"ตัดสินใจทันทีแล้วลุยแก้"},{eagle:"คิดวิธีใหม่ที่ไม่เคยมีใครลอง"},{mouse:"วิเคราะห์สาเหตุก่อนค่อยลงมือ"},{bear:"ปรึกษาคนอื่นหาทางที่ทุกคนรับได้"}],
+  ["สิ่งที่ทำให้คุณภูมิใจในงานที่สุดคือ",{bull:"ทำเป้าได้ ชนะ บรรลุผล"},{eagle:"ได้สร้างสรรค์สิ่งใหม่"},{mouse:"งานออกมาเป๊ะ ไม่มีที่ติ"},{bear:"ทีมและลูกค้ามีความสุข"}],
+  ["จุดอ่อนที่คนมักบอกคุณคือ",{bull:"ใจร้อน เอาแต่ผลงาน"},{eagle:"ไม่ค่อยลงรายละเอียด"},{mouse:"คิดเยอะ ตัดสินใจช้า"},{bear:"เกรงใจคนจนไม่กล้าปฏิเสธ"}],
+  ["สไตล์การสื่อสารของคุณ",{bull:"สั้น ตรง เน้นประเด็น"},{eagle:"สนุก มีพลัง ชวนคุย"},{mouse:"มีข้อมูล มีเหตุผลรองรับ"},{bear:"นุ่มนวล รับฟัง"}],
+  ["งานในฝันของคุณคือ",{bull:"งานที่มีเป้าชัด ท้าทาย วัดผลได้"},{eagle:"งานที่อิสระ ได้คิดได้ทดลอง"},{mouse:"งานที่มีระบบชัดเจน ทำตามขั้นตอน"},{bear:"งานที่ได้ช่วยเหลือผู้คน"}],
+  ["เวลาเครียดจากงาน คุณมักจะ",{bull:"เร่งจัดการให้จบ"},{eagle:"หาทางออกแปลกใหม่ หรือพักไปทำอย่างอื่น"},{mouse:"กลับมาเช็กรายละเอียดว่าพลาดตรงไหน"},{bear:"ระบายกับคนใกล้ตัว ค่อยๆ ตั้งหลัก"}],
+  ["ถ้าได้เลื่อนตำแหน่ง คุณอยากเป็น",{bull:"หัวหน้าที่นำทีมชนะ"},{eagle:"ผู้ริเริ่มโปรเจกต์ใหม่"},{mouse:"ผู้เชี่ยวชาญที่ทุกคนไว้ใจเรื่องความถูกต้อง"},{bear:"พี่เลี้ยงที่ทีมรักและพึ่งได้"}],
+  ["การตัดสินใจของคุณยึดอะไรเป็นหลัก",{bull:"ผลลัพธ์และความเร็ว"},{eagle:"โอกาสและความเป็นไปได้"},{mouse:"ข้อมูลและความเสี่ยง"},{bear:"ความรู้สึกของคนที่เกี่ยวข้อง"}],
+  ["เพื่อนร่วมงานจะนึกถึงคุณว่าเป็นคน",{bull:"มุ่งมั่น เอาจริง"},{eagle:"สดใส มีไอเดีย"},{mouse:"ละเอียด เชื่อถือได้"},{bear:"ใจดี เป็นที่พึ่ง"}]
 ];
-
-// 2) MBTI ฉบับสั้น — 4 แกน แกนละ 3 ข้อ (A ซ้าย = ตัวแรก, B ขวา = ตัวหลัง)
-const MBTI_Q = [
-  {axis:['E','I'], a:'ได้พลังจากการอยู่กับผู้คน เจอคนเยอะ ๆ', b:'ได้พลังจากการอยู่คนเดียว เงียบ ๆ'},
-  {axis:['E','I'], a:'คิดออกมาดัง ๆ พูดไปคิดไป',              b:'คิดในใจให้ตกผลึกก่อนค่อยพูด'},
-  {axis:['E','I'], a:'ชอบเริ่มบทสนทนากับคนแปลกหน้า',          b:'รอให้คนอื่นเข้ามาคุยก่อน'},
-  {axis:['S','N'], a:'สนใจข้อเท็จจริงและรายละเอียดที่จับต้องได้', b:'สนใจภาพรวม ความเป็นไปได้ และไอเดีย'},
-  {axis:['S','N'], a:'เชื่อสิ่งที่พิสูจน์ได้ ทำตามที่เคยได้ผล',   b:'ชอบลองวิธีใหม่ จินตนาการถึงอนาคต'},
-  {axis:['S','N'], a:'ทำงานเป็นขั้นตอนทีละสเต็ป',              b:'กระโดดข้ามไปมาตามแรงบันดาลใจ'},
-  {axis:['T','F'], a:'ตัดสินด้วยเหตุผลและตรรกะ',              b:'ตัดสินด้วยความรู้สึกและคุณค่าของคน'},
-  {axis:['T','F'], a:'ตรงไปตรงมา แม้จะฟังดูแรง',              b:'ถนอมน้ำใจ เลือกคำพูด'},
-  {axis:['T','F'], a:'มองความยุติธรรมและความถูกต้องเป็นหลัก',   b:'มองความกลมเกลียวและความเห็นอกเห็นใจ'},
-  {axis:['J','P'], a:'ชอบวางแผน มีตารางชัดเจน',              b:'ชอบยืดหยุ่น เปิดทางเลือกไว้'},
-  {axis:['J','P'], a:'ทำงานให้เสร็จก่อนแล้วค่อยเล่น',          b:'ทำไปเรื่อย ๆ เร่งช่วงใกล้เดดไลน์'},
-  {axis:['J','P'], a:'ชอบตัดสินใจให้จบ ปิดเรื่อง',            b:'ชอบเก็บทางเลือกไว้ ยังไม่รีบสรุป'},
+const Q_MBTI = [
+  ["หลังเจอผู้คนทั้งวัน คุณรู้สึก",{E:"มีพลัง อยากเจอคนต่อ"},{I:"เหนื่อย อยากอยู่เงียบๆ"}],
+  ["ในงานเลี้ยง คุณมัก",{E:"เดินทักทายหลายคน"},{I:"คุยลึกกับคนไม่กี่คน"}],
+  ["เวลาคิดงาน คุณคิดออกดีที่สุดเมื่อ",{E:"ได้พูดคุยกับคนอื่น"},{I:"ได้อยู่คนเดียวเงียบๆ"}],
+  ["คนทั่วไปมองคุณว่า",{E:"เปิดเผย เข้าถึงง่าย"},{I:"สงวนตัว ค่อยๆ รู้จัก"}],
+  ["คุณสนใจข้อมูลแบบไหนมากกว่า",{S:"ข้อเท็จจริง รายละเอียด ที่จับต้องได้"},{N:"ภาพรวม ความหมาย ความเป็นไปได้"}],
+  ["เวลาเรียนรู้สิ่งใหม่ คุณชอบ",{S:"ตัวอย่างจริง ทำตามขั้นตอน"},{N:"แนวคิด ทฤษฎี เชื่อมโยงภาพใหญ่"}],
+  ["คุณเชื่อถือสิ่งไหนมากกว่า",{S:"ประสบการณ์ที่ผ่านมา"},{N:"ลางสังหรณ์และการคาดการณ์"}],
+  ["คุณมักให้ความสำคัญกับ",{S:"สิ่งที่เป็นอยู่ตอนนี้"},{N:"สิ่งที่อาจจะเป็นในอนาคต"}],
+  ["เวลาตัดสินใจ คุณยึด",{T:"เหตุผลและความถูกต้อง"},{F:"ความรู้สึกและผลต่อคน"}],
+  ["เมื่อมีคนมาปรึกษาปัญหา คุณมัก",{T:"ช่วยหาทางแก้ที่เป็นเหตุเป็นผล"},{F:"รับฟังและเห็นอกเห็นใจก่อน"}],
+  ["คำชมแบบไหนทำให้คุณภูมิใจกว่า",{T:"ว่าคุณเก่งและคิดเฉียบ"},{F:"ว่าคุณเป็นคนดีและใส่ใจ"}],
+  ["ในการถกเถียง คุณให้ค่ากับ",{T:"ความจริง แม้จะแรงไปบ้าง"},{F:"ความกลมเกลียวของทุกฝ่าย"}],
+  ["คุณชอบใช้ชีวิตแบบ",{J:"มีแผน มีตารางชัดเจน"},{P:"ยืดหยุ่น เปิดรับสิ่งที่เข้ามา"}],
+  ["โต๊ะทำงาน/งานของคุณมักจะ",{J:"เป็นระเบียบ จัดไว้พร้อม"},{P:"กระจาย แต่หาเจอในแบบของตัวเอง"}],
+  ["เรื่อง deadline คุณ",{J:"ทำเสร็จก่อนเวลาเสมอ"},{P:"มักเร่งทำช่วงท้ายแต่ก็ทัน"}],
+  ["คุณรู้สึกสบายใจกว่าเมื่อ",{J:"ตัดสินใจเสร็จแล้ว ปิดเรื่อง"},{P:"ยังเปิดทางเลือกไว้ได้อีก"}]
 ];
-
-// 3) Mindset — Growth vs Fixed (Likert 1-5) growth:true = ยิ่งเห็นด้วยยิ่ง growth
-const MINDSET_Q = [
-  {t:'ความสามารถพัฒนาได้เสมอถ้าเราพยายามมากพอ', growth:true},
-  {t:'ความล้มเหลวคือโอกาสในการเรียนรู้',           growth:true},
-  {t:'ผมชอบงานที่ท้าทายแม้จะเสี่ยงทำพลาด',          growth:true},
-  {t:'คนเราเก่งมาแต่เกิด เปลี่ยนแปลงได้ยาก',        growth:false},
-  {t:'ถ้าต้องพยายามมาก แปลว่าเราไม่เก่งด้านนั้น',    growth:false},
-  {t:'คำติชมช่วยให้ผมพัฒนาตัวเองได้',              growth:true},
+const MBTI_DESC = {E:"Extravert — ได้พลังจากการมีปฏิสัมพันธ์",I:"Introvert — ได้พลังจากการอยู่กับตัวเอง",S:"Sensing — เน้นข้อเท็จจริงและรายละเอียด",N:"iNtuition — เน้นภาพรวมและความเป็นไปได้",T:"Thinking — ตัดสินด้วยเหตุผล",F:"Feeling — ตัดสินด้วยความรู้สึก/คน",J:"Judging — ชอบวางแผนและความแน่นอน",P:"Perceiving — ชอบความยืดหยุ่น"};
+const MBTI_NICK = {INTJ:"นักวางแผนยุทธศาสตร์",INTP:"นักตรรกะ",ENTJ:"ผู้บัญชาการ",ENTP:"นักโต้วาที",INFJ:"ผู้แนะนำ",INFP:"ผู้ไกล่เกลี่ย",ENFJ:"ผู้สอน/ผู้นำใจคน",ENFP:"นักรณรงค์",ISTJ:"ผู้พิทักษ์ระเบียบ",ISFJ:"ผู้ปกป้องดูแล",ESTJ:"ผู้บริหารจัดการ",ESFJ:"ผู้ดูแลสังคม",ISTP:"นักแก้ปัญหามือฉมัง",ISFP:"ศิลปินใจอ่อนโยน",ESTP:"นักลงมือทำ",ESFP:"ผู้สร้างความสนุก"};
+const Q_MIND = [
+  ["ความสามารถพัฒนาได้เสมอถ้าตั้งใจฝึก",false],["ความผิดพลาดคือโอกาสได้เรียนรู้",false],
+  ["ฉันชอบงานที่ท้าทายแม้จะยาก",false],["เมื่อถูกติ ฉันนำไปปรับปรุงตัว",false],
+  ["คนเราเก่งหรือไม่เก่งเป็นมาแต่เกิด เปลี่ยนยาก",true],["ถ้าต้องพยายามมาก แปลว่าฉันไม่เก่งด้านนั้น",true],
+  ["ฉันมักเลี่ยงงานที่กลัวว่าจะทำได้ไม่ดี",true],["เห็นคนอื่นเก่งกว่า ฉันอยากเรียนรู้จากเขา มากกว่ารู้สึกแย่กับตัวเอง",false]
 ];
-
-// 4) Extrovert / Introvert (Likert 1-5) ทุกข้อโน้มไป extrovert
-const EI_Q = [
-  {t:'ผมรู้สึกกระปรี้กระเปร่าเมื่อได้เจอผู้คนเยอะ ๆ'},
-  {t:'ผมชอบเป็นจุดสนใจในวงสนทนา'},
-  {t:'ผมมักพูดคุยกับคนแปลกหน้าได้ง่าย'},
-  {t:'การทำงานเป็นกลุ่มสนุกกว่าการทำงานคนเดียว'},
-  {t:'ผมชอบกิจกรรมที่มีคนเยอะและมีชีวิตชีวา'},
+const Q_EXIN = [
+  ["ฉันรู้สึกมีพลังเมื่อได้อยู่ท่ามกลางผู้คน",true],["ฉันชอบเริ่มบทสนทนากับคนแปลกหน้า",true],
+  ["ฉันคิดออกดีขึ้นเมื่อได้พูดออกมาดังๆ",true],["หลังสังสรรค์นานๆ ฉันต้องการเวลาอยู่เงียบๆ เพื่อชาร์จพลัง",false],
+  ["ฉันชอบทำงานเดี่ยวหรือกลุ่มเล็กมากกว่ากลุ่มใหญ่",false],["ฉันมักคิดให้รอบคอบก่อนพูด",false]
 ];
+const Q_WORK = [
+  "ฉันทำงานให้เสร็จตามที่รับปาก แม้ไม่มีใครตรวจ","ฉันมาตรงเวลาและเคารพเวลาของผู้อื่น",
+  "ถ้าฉันทำผิด ฉันยอมรับและแก้ไข ไม่โทษคนอื่น","ฉันภูมิใจในงานของตัวเอง แม้เป็นงานเล็ก",
+  "ฉันช่วยเพื่อนร่วมงานเมื่อเขาต้องการ แม้ไม่ใช่หน้าที่ฉัน","ฉันพร้อมเรียนรู้สิ่งใหม่เพื่อทำงานให้ดีขึ้น",
+  "ฉันรักษาความซื่อสัตย์ แม้ไม่มีใครเห็น","ฉันพยายามทำงานให้ดีกว่ามาตรฐานที่ถูกคาดหวัง"
+];
+const LIKERT = ["ไม่เห็นด้วยมาก","ไม่เห็นด้วย","กลางๆ","เห็นด้วย","เห็นด้วยมาก"];
+const SKILLS = [
+  ["ไทย — พูด","th_speak"],["ไทย — อ่าน","th_read"],["ไทย — เขียน","th_write"],
+  ["อังกฤษ — พูด","en_speak"],["อังกฤษ — อ่าน","en_read"],["อังกฤษ — เขียน","en_write"],
+  ["Canva","canva"],["Capcut","capcut"],["Lemon8","lemon8"],
+  ["Excel","excel"],["Word","word"],["PowerPoint","ppt"],
+  ["ChatGPT","chatgpt"],["Claude","claude"],["Gemini","gemini"]
+];
+const SKILL_GROUPS = [
+  ["🇹🇭 ภาษาไทย",["th_speak","th_read","th_write"]],
+  ["🌐 ภาษาอังกฤษ",["en_speak","en_read","en_write"]],
+  ["🎬 คอนเทนต์ / ตัดต่อ",["canva","capcut","lemon8"]],
+  ["💻 คอมพิวเตอร์",["excel","word","ppt"]],
+  ["🤖 AI",["chatgpt","claude","gemini"]]
+];
+const SKILL_LABEL = Object.fromEntries(SKILLS);
+const SOURCES = ["","Facebook","Instagram","TikTok","LINE / กลุ่มไลน์","JobsDB / เว็บหางาน","เพื่อน/คนรู้จักแนะนำ","เดินผ่าน/ป้ายหน้าร้าน","อื่นๆ"];
+const COMMUTES = ["","รถยนต์ส่วนตัว","มอเตอร์ไซค์ส่วนตัว","รถสาธารณะ (รถเมล์/รถไฟฟ้า/ตู้)","เดิน / จักรยาน","อื่นๆ"];
+function blankSkills(){let o={};SKILLS.forEach(s=>o[s[1]]=0);return o;}
 
-const LIKERT = ['ไม่เห็นด้วยมาก','ไม่เห็นด้วย','กลาง ๆ','เห็นด้วย','เห็นด้วยมาก'];
+/* ============================================================ STATE ============================================================ */
+let S = { step:0, company:null, companyOther:"", form:{}, knockout:{}, work:[{}], edu:[{}], skills:blankSkills(), consent:{}, aAnimal:{}, aMbti:{}, aMind:{}, aExin:{}, aWork:{} };
+const FLOW = ["company","form","intro","t_animal","t_mbti","t_mind","t_exin","t_work","result"];
+const STEP_LABELS = ["เลือกบริษัท","ข้อมูล","แนะนำ","สัตว์ 4 ทิศ","MBTI","Mindset","บุคลิก","ค่านิยม","ผลลัพธ์"];
+const root = document.getElementById('root');
+function go(i){ S.step=i; window.scrollTo(0,0); render(); }
+function next(){ go(Math.min(S.step+1,FLOW.length-1)); }
+function prev(){ go(Math.max(S.step-1,0)); }
 
-/* ============================================================
-   STATE + STORAGE
-   ============================================================ */
-const S = {
-  screen:'landing', company:null, position:null,
-  form:{}, ans:{animal:{}, mbti:{}, mindset:{}, ei:{}},
-  step:0, // ใช้ในหน้าแบบทดสอบ (0=info เสร็จแล้วเข้าเทสต์)
-};
-const STORE_KEY='recruit_apps_v1';
-const loadApps = () => JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
-const saveApps = (a) => localStorage.setItem(STORE_KEY, JSON.stringify(a));
-
-/* ============================================================
-   SCORING
-   ============================================================ */
-function scoreAnimal(){
-  const c={bull:0,eagle:0,bear:0,mouse:0};
-  Object.values(S.ans.animal).forEach(a=>{if(a)c[a]++});
-  const sorted=Object.entries(c).sort((x,y)=>y[1]-x[1]);
-  return {counts:c, primary:sorted[0][0], secondary:sorted[1][0]};
-}
-function scoreMBTI(){
-  const tally={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
-  MBTI_Q.forEach((q,i)=>{const v=S.ans.mbti[i]; if(v)tally[v]++;});
-  const pick=(x,y)=>tally[x]>=tally[y]?x:y;
-  return pick('E','I')+pick('S','N')+pick('T','F')+pick('J','P');
-}
-function scoreMindset(){
-  let sum=0,n=0;
-  MINDSET_Q.forEach((q,i)=>{const v=S.ans.mindset[i]; if(v){n++; sum+=q.growth?v:(6-v);}});
-  const pct=n?Math.round(((sum/n)-1)/4*100):0;
-  return {pct, label: pct>=60?'Growth Mindset':pct>=40?'ผสมผสาน':'Fixed Mindset'};
-}
-function scoreEI(){
-  let sum=0,n=0;
-  EI_Q.forEach((q,i)=>{const v=S.ans.ei[i]; if(v){n++; sum+=v;}});
-  const avg=n?sum/n:3;
-  const pct=Math.round((avg-1)/4*100);
-  return {pct, label: avg>=3.4?'Extrovert':avg<=2.6?'Introvert':'Ambivert'};
-}
-function computeFit(pos){
-  const an=scoreAnimal(), mb=scoreMBTI(), md=scoreMindset(), ei=scoreEI();
-  const t=pos.target; let score=0;
-  // animal 40
-  if(t.animal===an.primary) score+=40;
-  else if(t.animal===an.secondary) score+=24;
-  // mbti 30 (นับตัวอักษรที่ตรง)
-  let m=0; for(let i=0;i<4;i++) if(mb[i]===t.mbti[i]) m++;
-  score+=Math.round(m/4*30);
-  // mindset 15
-  if(t.mindset==='any') score+=15;
-  else if(t.mindset==='growth') score+=Math.round(md.pct/100*15);
-  // social 15
-  if(t.social==='any') score+=15;
-  else if(t.social==='extrovert') score+=Math.round(ei.pct/100*15);
-  else if(t.social==='introvert') score+=Math.round((100-ei.pct)/100*15);
-  return Math.min(100,Math.round(score));
-}
-const fitColor=(f)=> f>=75?'var(--ok)': f>=50?'var(--warn)':'var(--bull)';
-
-/* ============================================================
-   NAV + RENDER
-   ============================================================ */
-const app=()=>document.getElementById('app');
-function go(screen){S.screen=screen; window.scrollTo(0,0); render();}
-
+/* ============================================================ RENDER ROUTER ============================================================ */
 function render(){
-  const s=S.screen;
-  if(s==='landing') return renderLanding();
-  if(s==='positions') return renderPositions();
-  if(s==='form') return renderForm();
-  if(s==='test') return renderTest();
-  if(s==='result') return renderResult();
-  if(s==='done') return renderDone();
-  if(s==='hr') return (sb && !HR_AUTH) ? renderHRLogin() : renderHR();
+  if(location.hash==="#hr"){ root.classList.add('hrwrap'); return hrEnsure(); }
+  root.classList.remove('hrwrap');
+  const screen = FLOW[S.step];
+  let html = topbar() + (S.step>0 ? progress() : "");
+  switch(screen){
+    case "company": html+=scrCompany(); break;
+    case "form":    html+=scrForm(); break;
+    case "intro":   html+=scrIntro(); break;
+    case "t_animal":html+=scrAnimal(); break;
+    case "t_mbti":  html+=scrMbti(); break;
+    case "t_mind":  html+=scrLikert("Growth Mindset","🌱","ลองอ่านแต่ละข้อแล้วบอกว่าตรงกับคุณแค่ไหน ตอบตามใจจริงได้เลย",Q_MIND.map(q=>q[0]),"aMind"); break;
+    case "t_exin":  html+=scrLikert("คุณเป็นคนแบบไหน","🎭","คุณได้พลังจากตรงไหนมากกว่ากัน ตอบตามที่เป็นจริง",Q_EXIN.map(q=>q[0]),"aExin"); break;
+    case "t_work":  html+=scrLikert("เรื่องที่คุณให้ค่าในการทำงาน","⚖️","เรื่องพวกนี้คุณคิดยังไง ตอบเป็นตัวเองได้เลย",Q_WORK,"aWork"); break;
+    case "result":  html+=scrResult(); break;
+  }
+  root.innerHTML = html;
+  bind(screen);
+}
+function topbar(){
+  return `<div class="topbar"><div class="logo"><span class="dot">🧭</span> ร่วมงานกับเรา</div>
+    <button class="ghost" onclick="location.hash='#hr'">ทีม HR</button></div>`;
+}
+function progress(){
+  const pct = Math.round((S.step)/(FLOW.length-1)*100);
+  let chips = STEP_LABELS.map((l,i)=>{let c=i<S.step?"done":(i===S.step?"on":"");return `<span class="${c}">${i<S.step?"✓ ":""}${l}</span>`;}).join("");
+  return `<div class="progress"><i style="width:${pct}%"></i></div><div class="steps">${chips}</div>`;
 }
 
-function renderLanding(){
-  app().innerHTML=`
-    <h1>ร่วมงานกับเรา 👋</h1>
-    <p class="sub">เลือกบริษัทที่คุณสนใจ กรอกใบสมัคร แล้วทำแบบทดสอบบุคลิกภาพสั้น ๆ เพื่อให้เราจับคู่คุณกับตำแหน่งที่ใช่</p>
-    <div class="companies">
-      ${COMPANIES.map(c=>`
-        <div class="co" onclick="selectCompany('${c.id}')">
-          <div class="badge" style="background:${c.color}">${c.icon}</div>
-          <h3>${c.name}</h3>
-          <p>${c.tagline}</p>
-          <div class="go">→</div>
-        </div>`).join('')}
-    </div>
-    ${sb?'':`<div class="notice">ℹ️ โหมดออฟไลน์ — ข้อมูลเก็บในเครื่องนี้ ตั้งค่า Supabase ที่ปุ่ม “สำหรับ HR ▸ ⚙️ ตั้งค่า” เพื่อใช้งานออนไลน์</div>`}`;
+/* ---------- 0. COMPANY ---------- */
+function scrCompany(){
+  return `<div class="card">
+    <h1>มาร่วมงานกันเถอะ 👋</h1>
+    <p class="muted">เลือกบริษัทที่อยากร่วมงานด้วยก่อนเลย แล้วค่อยๆ กรอกไปทีละหน้า ใช้เวลาประมาณ 15–20 นาที ระหว่างทางจะมีแบบทดสอบสนุกๆ ให้ลองทำ ตอบเป็นตัวเองได้เต็มที่ ไม่มีผิดถูกนะ</p>
+    <div class="grid" style="margin-top:22px">
+      ${COMPANIES.map((c,i)=>`<div class="co" data-co="${c.id}" style="animation-delay:${i*.06}s">
+        <div class="ic" style="background:${c.color}">${c.ic}</div>
+        <div><b>${c.name}</b><small>${c.sub}</small></div><span class="arr">→</span></div>`).join("")}
+    </div></div>`;
 }
-function selectCompany(id){S.company=COMPANIES.find(c=>c.id===id); go('positions');}
 
-function renderPositions(){
-  const c=S.company;
-  const list=POSITIONS.filter(p=>p.co===c.id);
-  app().innerHTML=`
-    <button class="back" onclick="go('landing')">← เปลี่ยนบริษัท</button>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
-      <div class="badge" style="background:${c.color};width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800">${c.icon}</div>
-      <h1 style="margin:0">${c.name}</h1>
-    </div>
-    <p class="sub">ตำแหน่งที่เปิดรับ ${list.length} ตำแหน่ง</p>
-    ${list.length? list.map(p=>`
-      <div class="pos" onclick="selectPosition('${p.id}')">
-        <div>
-          <h3>${p.title}</h3>
-          <div class="meta">${p.desc}</div>
-          <div style="margin-top:8px"><span class="tag">${p.dept}</span><span class="tag">${p.type}</span></div>
-        </div>
-        <div style="color:var(--muted);font-size:22px">→</div>
-      </div>`).join('')
-      : `<div class="empty">ยังไม่มีตำแหน่งเปิดรับในขณะนี้</div>`}`;
+/* ---------- 1. FORM ---------- */
+function opts(arr,val){return arr.map(o=>`<option ${val===o?'selected':''}>${o||'-- เลือก --'}</option>`).join("");}
+function skillSlider(key){let v=S.skills[key]??0;return `<div class="skill"><span>${SKILL_LABEL[key]}</span><input type="range" min="0" max="10" value="${v}" id="s_${key}" oninput="this.nextElementSibling.textContent=this.value"><b>${v}</b></div>`;}
+function workRow(w,i){
+  return `<div class="rowblock">${S.work.length>1?`<button class="del" onclick="removeWork(${i})">✕ ลบ</button>`:''}
+    <div class="row2"><div><label class="f">บริษัท / ที่ทำงาน</label><input id="w_company_${i}" value="${esc(w.company||'')}" placeholder="ชื่อบริษัท"></div>
+      <div><label class="f">ตำแหน่ง</label><input id="w_position_${i}" value="${esc(w.position||'')}" placeholder="ตำแหน่งที่ทำ"></div></div>
+    <div class="row2"><div><label class="f">ระยะเวลา (จาก–ถึง)</label><input id="w_period_${i}" value="${esc(w.period||'')}" placeholder="เช่น 2563–2565"></div>
+      <div><label class="f">เงินเดือนสุดท้าย (บาท)</label><input id="w_salary_${i}" type="number" value="${esc(w.salary||'')}" placeholder="เช่น 18000"></div></div>
+    <label class="f">เหตุผลที่ออก</label><textarea id="w_reason_${i}" style="min-height:64px" placeholder="เล่าตามจริงได้เลย">${esc(w.reason||'')}</textarea></div>`;
 }
-function selectPosition(id){S.position=POSITIONS.find(p=>p.id===id); go('form');}
+function eduRow(e,i){
+  return `<div class="rowblock">${S.edu.length>1?`<button class="del" onclick="removeEdu(${i})">✕ ลบ</button>`:''}
+    <div class="row2"><div><label class="f">ระดับการศึกษา</label><input id="e_level_${i}" value="${esc(e.level||'')}" placeholder="เช่น ม.6 / ปวส. / ป.ตรี"></div>
+      <div><label class="f">สถานศึกษา</label><input id="e_school_${i}" value="${esc(e.school||'')}" placeholder="ชื่อโรงเรียน/มหาวิทยาลัย"></div></div>
+    <div class="row2"><div><label class="f">สาขา / คณะ</label><input id="e_major_${i}" value="${esc(e.major||'')}" placeholder="เช่น การบัญชี"></div>
+      <div class="row2" style="gap:10px"><div><label class="f">ปีที่จบ</label><input id="e_year_${i}" value="${esc(e.year||'')}" placeholder="พ.ศ."></div>
+      <div><label class="f">เกรดเฉลี่ย</label><input id="e_gpa_${i}" value="${esc(e.gpa||'')}" placeholder="เช่น 3.20"></div></div></div></div>`;
+}
+function scrForm(){
+  const co = COMPANIES.find(c=>c.id===S.company);
+  const f=S.form, k=S.knockout, c=S.consent;
+  return `<div class="card">
+    <div class="badge" style="background:${co.color}22;color:${co.color}">สมัครที่ ${co.name}${S.company==='other'&&S.companyOther?': '+esc(S.companyOther):''}</div>
+    <h2 style="margin-top:12px">เล่าเรื่องของคุณให้เราฟังหน่อย</h2>
+    <p class="muted">กรอกตามจริงได้เลย สบายๆ ช่องที่มี <span style="color:var(--brand)">*</span> ขอให้ใส่ด้วยนะ</p>
 
-function renderForm(){
-  const p=S.position, f=S.form;
-  app().innerHTML=`
-    <button class="back" onclick="go('positions')">← เลือกตำแหน่งอื่น</button>
-    <div class="progress">
-      <div class="lbl"><span>ขั้นที่ 1 จาก 3 · ข้อมูลผู้สมัคร</span><span>33%</span></div>
-      <div class="bar"><div class="fill" style="width:33%"></div></div>
-    </div>
-    <h2>สมัครตำแหน่ง: ${p.title}</h2>
-    <p class="sub">${S.company.name} · ${p.dept}</p>
-    <div class="card">
-      <div class="row">
-        <div class="field"><label class="req">ชื่อ - นามสกุล</label><input id="fname" value="${f.name||''}"></div>
-        <div class="field"><label class="req">ชื่อเล่น</label><input id="fnick" value="${f.nick||''}"></div>
-      </div>
-      <div class="row">
-        <div class="field"><label class="req">เบอร์โทรศัพท์มือถือ</label><input id="fphone" value="${f.phone||''}"></div>
-        <div class="field"><label>LINE ID</label><input id="fline" value="${f.line||''}"></div>
-      </div>
-      <div class="row">
-        <div class="field"><label>Email</label><input id="femail" type="email" value="${f.email||''}"></div>
-        <div class="field"><label>วุฒิการศึกษาสูงสุด</label>
-          <select id="fedu">
-            <option value="">— เลือก —</option>
-            ${['มัธยมต้น','มัธยมปลาย / ปวช.','ปวส. / อนุปริญญา','ปริญญาตรี','ปริญญาโทขึ้นไป','อื่น ๆ'].map(o=>`<option ${f.edu===o?'selected':''}>${o}</option>`).join('')}
-          </select></div>
-      </div>
+    <div class="sec-h"><span class="ic2">👤</span> ข้อมูลส่วนตัว</div>
+    <div class="row2"><div><label class="f">ชื่อ–นามสกุล <span class="req">*</span></label><input id="f_name" value="${esc(f.name||'')}" placeholder="เช่น สมชาย ใจดี"></div>
+      <div><label class="f">ชื่อเล่น</label><input id="f_nick" value="${esc(f.nick||'')}" placeholder="ชื่อเล่น"></div></div>
+    <div class="row2"><div><label class="f">เบอร์โทร <span class="req">*</span></label><input id="f_phone" value="${esc(f.phone||'')}" placeholder="08x-xxx-xxxx"></div>
+      <div><label class="f">อีเมล / LINE ID</label><input id="f_contact" value="${esc(f.contact||'')}" placeholder="email หรือ LINE"></div></div>
+    <div class="row2"><div><label class="f">วัน/เดือน/ปีเกิด</label><input id="f_birth" value="${esc(f.birth||'')}" placeholder="วว/ดด/ปปปป"></div>
+      <div><label class="f">อายุ</label><input id="f_age" type="number" value="${esc(f.age||'')}" placeholder="ปี"></div></div>
+    <label class="f">ที่อยู่ปัจจุบัน (ที่ติดต่อได้)</label><input id="f_addr" value="${esc(f.addr||'')}" placeholder="บ้านเลขที่ / หมู่บ้าน / ถนน">
+    <div class="row2" style="margin-top:8px"><div><input id="f_district" value="${esc(f.district||'')}" placeholder="แขวง/ตำบล – เขต/อำเภอ"></div>
+      <div><input id="f_province" value="${esc(f.province||'')}" placeholder="จังหวัด"></div></div>
+    <div class="row2" style="margin-top:8px"><div><label class="f">ผู้ติดต่อฉุกเฉิน</label><input id="f_emgName" value="${esc(f.emgName||'')}" placeholder="ชื่อ (ความสัมพันธ์)"></div>
+      <div><label class="f">เบอร์ผู้ติดต่อฉุกเฉิน</label><input id="f_emgPhone" value="${esc(f.emgPhone||'')}" placeholder="08x-xxx-xxxx"></div></div>
 
-      <div class="field"><label>แนะนำตัวเองสั้น ๆ (จุดเด่น นิสัย สิ่งที่อยากให้เรารู้จัก)</label>
-        <textarea id="fabout" placeholder="เล่าเกี่ยวกับตัวคุณ...">${f.about||''}</textarea></div>
-      <div class="field"><label>ประสบการณ์ทำงานที่ผ่านมา (ที่ไหน ตำแหน่งอะไร กี่ปี เหตุผลที่ออก)</label>
-        <textarea id="fexp" placeholder="ถ้าไม่มีประสบการณ์ ใส่ &quot;-&quot; ได้">${f.exp||''}</textarea></div>
+    <div class="sec-h"><span class="ic2">💼</span> ตำแหน่งที่สมัคร</div>
+    <label class="f">ตำแหน่งที่ต้องการสมัคร <span class="req">*</span></label>
+    <input id="f_pos" value="${esc(f.pos||'')}" placeholder="พิมพ์ตำแหน่งที่อยากสมัคร">
+    <div class="hint">💡 ${POS_BY_CO[S.company]||'พิมพ์ตำแหน่งที่อยากสมัครได้เลย'}</div>
+    <label class="f">รู้ข่าวการรับสมัครจากช่องทางไหน</label><select id="f_source">${opts(SOURCES,f.source)}</select>
 
-      <div class="row">
-        <div class="field"><label>เงินเดือนที่คาดหวัง (บาท/เดือน)</label><input id="fsalary" value="${f.salary||''}" placeholder="เช่น 18,000 - 22,000"></div>
-        <div class="field"><label>เริ่มงานได้เร็วที่สุดวันที่</label><input id="fstart" type="date" value="${f.start||''}"></div>
-      </div>
-      <div class="field"><label>รู้จักการรับสมัครนี้จากช่องทางไหน</label>
-        <select id="fsource">
-          ${['Facebook','Instagram','TikTok','LINE / LINE OA','JobThai / เว็บหางาน','เพื่อนแนะนำ','เว็บไซต์บริษัท','อื่น ๆ'].map(o=>`<option ${f.source===o?'selected':''}>${o}</option>`).join('')}
-        </select></div>
+    <div class="sec-h"><span class="ic2">🎓</span> ประวัติการศึกษา</div>
+    <div id="eduList">${S.edu.map((e,i)=>eduRow(e,i)).join("")}</div>
+    <button class="addbtn" onclick="addEdu()">＋ เพิ่มระดับการศึกษา</button>
 
-      <div class="field"><label>แนบ Resume / CV หรือรูปถ่าย (ถ้ามี)</label>
-        <input type="file" id="fresume" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" onchange="handleResume(this)">
-        <div class="hint" id="resumeHint">${f.resumeName? '📎 '+f.resumeName : 'รองรับ PDF / รูปภาพ / Word · ไม่เกิน 3MB'}</div>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="btn primary block" onclick="submitForm()">ถัดไป: ทำแบบทดสอบ →</button>
-    </div>`;
+    <div class="sec-h"><span class="ic2">🏢</span> ประวัติการทำงาน</div>
+    <p class="muted" style="font-size:.85rem;margin-top:0">ใส่ได้หลายที่ เริ่มจากงานล่าสุด (ถ้ายังไม่เคยทำงานข้ามได้)</p>
+    <div id="workList">${S.work.map((w,i)=>workRow(w,i)).join("")}</div>
+    <button class="addbtn" onclick="addWork()">＋ เพิ่มประวัติการทำงาน</button>
+
+    <div class="sec-h"><span class="ic2">💰</span> เงินเดือน</div>
+    <div class="row2"><div><label class="f">เงินเดือนปัจจุบัน/ล่าสุด (บาท)</label><input id="f_lastsal" type="number" value="${esc(f.lastsal||'')}" placeholder="เช่น 18000"><div class="hint">ใช้ประเมินเงินเดือนใหม่ให้สมเหตุสมผล เป็นความลับ</div></div>
+      <div><label class="f">เงินเดือนที่คาดหวัง (บาท) <span class="req">*</span></label><input id="f_expsal" type="number" value="${esc(f.expsal||'')}" placeholder="เช่น 20000"></div></div>
+
+    <div class="sec-h"><span class="ic2">🚗</span> การเดินทาง & ความพร้อม</div>
+    <div class="row2"><div><label class="f">พักอยู่แถวไหน</label><input id="f_liveArea" value="${esc(f.liveArea||'')}" placeholder="ย่าน/เขต/อำเภอที่พัก"></div>
+      <div><label class="f">เดินทางมาทำงานยังไง</label><select id="f_commute">${opts(COMMUTES,f.commute)}</select></div></div>
+    <input id="f_commuteOther" value="${esc(f.commuteOther||'')}" placeholder="ถ้า 'อื่นๆ' ระบุ" style="margin-top:8px">
+    <div class="row2" style="margin-top:8px"><div><label class="f">เริ่มงานได้เมื่อไหร่ <span class="req">*</span></label><select id="k_start">${opts(["","ทันที","ภายใน 1 สัปดาห์","ภายใน 2 สัปดาห์","ภายใน 1 เดือน","มากกว่า 1 เดือน"],k.start)}</select></div>
+      <div><label class="f">เดินทางมาที่ทำงานสะดวกไหม <span class="req">*</span></label><select id="k_travel">${opts(["","สะดวก","พอไหว","ไม่สะดวก"],k.travel)}</select></div></div>
+    <label class="f">ทำงานเต็มเวลา / ทำงานวันเสาร์ได้ไหม</label><select id="k_fulltime">${opts(["","ได้ เต็มเวลา","ได้ แต่มีเงื่อนไข","ทำได้เฉพาะ Part-time"],k.fulltime)}</select>
+
+    <div class="sec-h"><span class="ic2">⭐</span> ทักษะ (ให้คะแนนตัวเอง 0–10)</div>
+    <p class="muted" style="font-size:.85rem;margin-top:0">0 = ไม่มีพื้นฐาน, 10 = เชี่ยวชาญมาก ตอบตามจริง</p>
+    ${SKILL_GROUPS.map(g=>`<div class="skgrp"><div class="glab">${g[0]}</div>${g[1].map(k=>skillSlider(k)).join("")}</div>`).join("")}
+
+    <div class="sec-h"><span class="ic2">🤖</span> AI กับการทำงาน</div>
+    <label class="f">โปรแกรม AI ที่คุณใช้หรือรู้จัก มีอะไรบ้าง?</label>
+    <textarea id="f_aiTools" style="min-height:70px" placeholder="เช่น ChatGPT, Claude, Gemini, Canva AI, Capcut AI ฯลฯ — เขียนเท่าที่รู้จัก">${esc(f.aiTools||'')}</textarea>
+    <label class="f">คุณคิดว่า AI เข้ามาช่วยงานคุณได้มากน้อยแค่ไหน อย่างไร?</label>
+    <textarea id="f_aiOpinion" style="min-height:90px" placeholder="เล่าความคิดเห็นของคุณ — ยกตัวอย่างงานที่ AI ช่วยได้ก็ได้ ไม่มีคำตอบผิด">${esc(f.aiOpinion||'')}</textarea>
+
+    <div class="sec-h"><span class="ic2">✍️</span> เขียนแนะนำตัว</div>
+    <div class="pdpa-box">ส่วนนี้เราอยากรู้จัก "ตัวคุณจริงๆ" ผ่านการเขียน ลองตอบประมาณนี้: คุณเป็นคนแบบไหน · จุดเด่น/สิ่งที่ทำได้ดี · ทำไมอยากร่วมงานกับเรา · เป้าหมายในงานของคุณ — เขียนยาวได้เต็มที่ตามสไตล์ของคุณ</div>
+    <textarea id="f_intro" style="min-height:160px" placeholder="เริ่มเขียนเล่าเรื่องของคุณได้เลย...">${esc(f.intro||'')}</textarea>
+
+    <div class="sec-h"><span class="ic2">📎</span> แนบเอกสาร (ถ้ามี)</div>
+    <label class="f">Resume / CV หรือรูปถ่าย</label>
+    <input type="file" id="f_resume" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" onchange="handleResume(this)">
+    <div class="hint" id="resumeHint">${S.form.resumeName? '📎 '+esc(S.form.resumeName)+' (แนบแล้ว)' : 'รองรับ PDF / รูปภาพ / Word · ไม่เกิน 3MB'}</div>
+
+    <div class="sec-h"><span class="ic2">🔒</span> ความยินยอม</div>
+    <div class="pdpa-box">ข้อมูลที่กรอกจะถูกเก็บเพื่อใช้พิจารณารับสมัครงานเท่านั้น บริษัทจะรักษาความลับตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA) และจะไม่เปิดเผยต่อบุคคลภายนอกโดยไม่ได้รับอนุญาต</div>
+    <label class="consent"><input type="checkbox" id="c_pdpa" ${c.pdpa?'checked':''}><span>ข้าพเจ้ายินยอมให้บริษัทเก็บและใช้ข้อมูลส่วนบุคคลเพื่อการพิจารณาสมัครงาน <span style="color:var(--brand)">*</span></span></label>
+    <label class="consent"><input type="checkbox" id="c_truth" ${c.truth?'checked':''}><span>ข้าพเจ้าขอรับรองว่าข้อมูลทั้งหมดเป็นความจริง หากเป็นเท็จยินยอมให้บริษัทเลิกจ้างได้ทันที <span style="color:var(--brand)">*</span></span></label>
+
+    <div class="navbtns"><button class="btn sec" onclick="captureForm();prev()">← ย้อนกลับ</button>
+      <button class="btn" id="formNext">ถัดไป: ทำแบบทดสอบ →</button></div></div>`;
 }
 function handleResume(input){
   const file=input.files[0]; const hint=document.getElementById('resumeHint');
   if(!file)return;
   if(file.size>3*1024*1024){alert('ไฟล์ใหญ่เกิน 3MB กรุณาเลือกไฟล์ใหม่');input.value='';return;}
-  const reader=new FileReader();
-  reader.onload=()=>{ S.form.resumeName=file.name; S.form.resumeData=reader.result;
-    if(hint)hint.textContent='📎 '+file.name+' (แนบแล้ว)'; };
-  reader.readAsDataURL(file);
+  const r=new FileReader();
+  r.onload=()=>{ S.form.resumeName=file.name; S.form.resumeData=r.result; if(hint)hint.textContent='📎 '+file.name+' (แนบแล้ว)'; };
+  r.readAsDataURL(file);
 }
-function submitForm(){
-  const g=id=>{const el=document.getElementById(id); return el?el.value.trim():'';};
-  const f={
-    name:g('fname'),nick:g('fnick'),phone:g('fphone'),line:g('fline'),email:g('femail'),
-    edu:g('fedu'),about:g('fabout'),exp:g('fexp'),salary:g('fsalary'),start:g('fstart'),source:g('fsource'),
-    resumeName:S.form.resumeName||'', resumeData:S.form.resumeData||'',
-  };
-  if(!f.name||!f.nick||!f.phone){alert('กรุณากรอก ชื่อ-นามสกุล, ชื่อเล่น และเบอร์โทรศัพท์');return;}
-  S.form=f; S.step=0; go('test');
+function captureForm(){
+  const gv=id=>{let el=document.getElementById(id);return el?el.value.trim():"";};
+  const keepResume={resumeName:S.form.resumeName,resumeData:S.form.resumeData};
+  S.form={name:gv('f_name'),nick:gv('f_nick'),phone:gv('f_phone'),contact:gv('f_contact'),
+    birth:gv('f_birth'),age:gv('f_age'),addr:gv('f_addr'),district:gv('f_district'),province:gv('f_province'),
+    emgName:gv('f_emgName'),emgPhone:gv('f_emgPhone'),
+    pos:gv('f_pos'),source:gv('f_source'),lastsal:gv('f_lastsal'),expsal:gv('f_expsal'),
+    liveArea:gv('f_liveArea'),commute:gv('f_commute'),commuteOther:gv('f_commuteOther'),
+    aiTools:gv('f_aiTools'),aiOpinion:gv('f_aiOpinion'),intro:gv('f_intro'),
+    resumeName:keepResume.resumeName,resumeData:keepResume.resumeData};
+  S.knockout={start:gv('k_start'),travel:gv('k_travel'),fulltime:gv('k_fulltime')};
+  S.work=S.work.map((w,i)=>({period:gv('w_period_'+i),company:gv('w_company_'+i),position:gv('w_position_'+i),salary:gv('w_salary_'+i),reason:gv('w_reason_'+i)}));
+  S.edu=S.edu.map((e,i)=>({level:gv('e_level_'+i),school:gv('e_school_'+i),major:gv('e_major_'+i),year:gv('e_year_'+i),gpa:gv('e_gpa_'+i)}));
+  SKILLS.forEach(s=>{let el=document.getElementById('s_'+s[1]);if(el)S.skills[s[1]]=+el.value;});
+  let cp=document.getElementById('c_pdpa'),ct=document.getElementById('c_truth');
+  S.consent={pdpa:cp?cp.checked:S.consent.pdpa,truth:ct?ct.checked:S.consent.truth};
+}
+function addWork(){captureForm();S.work.push({});render();}
+function removeWork(i){captureForm();S.work.splice(i,1);if(!S.work.length)S.work=[{}];render();}
+function addEdu(){captureForm();S.edu.push({});render();}
+function removeEdu(i){captureForm();S.edu.splice(i,1);if(!S.edu.length)S.edu=[{}];render();}
+
+/* ---------- 2. INTRO ---------- */
+function scrIntro(){
+  return `<div class="card"><h2>🧪 มาทำแบบทดสอบกัน</h2>
+    <p class="muted">ช่วงนี้สนุกสุดแล้ว! เราอยากรู้จักตัวจริงของคุณมากขึ้น ว่าทำงานสไตล์ไหน ถนัดอะไร ตอบตามใจตัวเองได้เลย ไม่มีถูกผิด แล้วพอทำเสร็จคุณจะได้เห็นผลของตัวเองด้วย</p>
+    <div class="restile"><h3>🐂 สัตว์ 4 ทิศ <span class="tag">10 ข้อ</span></h3><p class="muted">ดูว่าสไตล์การทำงานคุณเป็นแบบไหน — กระทิง อินทรี หนู หรือหมี</p></div>
+    <div class="restile"><h3>🧩 MBTI <span class="tag">16 ข้อ</span></h3><p class="muted">บุคลิก 16 แบบ ที่จะทำให้คุณเข้าใจตัวเองขึ้นอีกนิด</p></div>
+    <div class="restile"><h3>🌱 Growth Mindset <span class="tag">8 ข้อ</span></h3><p class="muted">คุณมองเรื่องการพัฒนาตัวเองและเรื่องยากๆ ยังไง</p></div>
+    <div class="restile"><h3>🎭 ชอบอยู่คนเดียว หรืออยู่กับคน <span class="tag">6 ข้อ</span></h3><p class="muted">คุณได้พลังจากตรงไหน</p></div>
+    <div class="restile"><h3>⚖️ เรื่องที่ให้ค่าในการทำงาน <span class="tag">8 ข้อ</span></h3><p class="muted">มุมมองเรื่องความรับผิดชอบและความจริงใจ</p></div>
+    <div class="navbtns"><button class="btn sec" onclick="prev()">← ย้อนกลับ</button><button class="btn" onclick="next()">ลุยเลย →</button></div></div>`;
+}
+/* ---------- 3. ANIMAL ---------- */
+function scrAnimal(){
+  let qs = Q_ANIMAL.map((q,i)=>{
+    let o = q.slice(1).map(o=>{let key=Object.keys(o)[0],val=o[key];let sel=S.aAnimal[i]===key?"sel":"";return `<div class="opt ${sel}" data-ani="${i}" data-k="${key}"><div class="bx"></div><div>${val}</div></div>`;}).join("");
+    return `<div class="q"><div class="qt"><span class="n">${i+1}.</span>${q[0]}</div>${o}</div>`;
+  }).join("");
+  return `<div class="card"><h2>🐂 สัตว์ 4 ทิศ</h2><p class="muted">เลือกข้อที่ "ตรงกับคุณมากที่สุด" ในแต่ละข้อ</p>${qs}
+    <div class="navbtns"><button class="btn sec" onclick="prev()">← ย้อนกลับ</button><button class="btn" id="aniNext">ถัดไป →</button></div></div>`;
+}
+/* ---------- 4. MBTI ---------- */
+function scrMbti(){
+  let qs = Q_MBTI.map((q,i)=>{let oA=q[1],oB=q[2],kA=Object.keys(oA)[0],kB=Object.keys(oB)[0];
+    return `<div class="q"><div class="qt"><span class="n">${i+1}.</span>${q[0]}</div>
+      <div class="opt ${S.aMbti[i]===kA?'sel':''}" data-mb="${i}" data-k="${kA}"><div class="bx"></div><div>${oA[kA]}</div></div>
+      <div class="opt ${S.aMbti[i]===kB?'sel':''}" data-mb="${i}" data-k="${kB}"><div class="bx"></div><div>${oB[kB]}</div></div></div>`;
+  }).join("");
+  return `<div class="card"><h2>🧩 MBTI</h2><p class="muted">เลือกข้อที่ใกล้เคียงตัวคุณมากกว่า</p>${qs}
+    <div class="navbtns"><button class="btn sec" onclick="prev()">← ย้อนกลับ</button><button class="btn" id="mbNext">ถัดไป →</button></div></div>`;
+}
+/* ---------- 5/6/7. LIKERT ---------- */
+function scrLikert(title,emoji,sub,items,storeKey){
+  let qs = items.map((t,i)=>{let buttons=LIKERT.map((l,v)=>`<button data-lk="${storeKey}" data-i="${i}" data-v="${v+1}" class="${S[storeKey][i]===v+1?'sel':''}">${l}</button>`).join("");
+    return `<div class="q"><div class="qt"><span class="n">${i+1}.</span>${t}</div><div class="likert">${buttons}</div></div>`;}).join("");
+  return `<div class="card"><h2>${emoji} ${title}</h2><p class="muted">${sub}</p>${qs}
+    <div class="navbtns"><button class="btn sec" onclick="prev()">← ย้อนกลับ</button><button class="btn" id="lkNext">ถัดไป →</button></div></div>`;
 }
 
-/* ---------- แบบทดสอบ (รวม 4 ชุดเป็นหน้าเดียวแบบเลื่อนทีละส่วน) ---------- */
-const TEST_SECTIONS=[
-  {key:'animal',  title:'สัตว์ 4 ทิศ',      sub:'เลือกข้อที่ตรงกับตัวคุณมากที่สุด'},
-  {key:'mbti',    title:'บุคลิกภาพ (MBTI)',  sub:'เลือกข้อความที่ใกล้เคียงคุณมากกว่า'},
-  {key:'mindset', title:'Mindset',           sub:'ให้คะแนนความเห็นด้วยของแต่ละข้อ'},
-  {key:'ei',      title:'พลังงานทางสังคม',    sub:'ให้คะแนนความเห็นด้วยของแต่ละข้อ'},
-];
-function renderTest(){
-  const sec=TEST_SECTIONS[S.step];
-  const total=TEST_SECTIONS.length;
-  const pct=Math.round((S.step)/total*66)+34;
-  app().innerHTML=`
-    <button class="back" onclick="testBack()">← ${S.step===0?'กลับไปแก้ใบสมัคร':'ชุดก่อนหน้า'}</button>
-    <div class="progress">
-      <div class="lbl"><span>ขั้นที่ 2 จาก 3 · แบบทดสอบ ${S.step+1}/${total}</span><span>${pct}%</span></div>
-      <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
-    </div>
-    <h2>${sec.title}</h2>
-    <p class="sub">${sec.sub}</p>
-    <div class="card">${renderSection(sec.key)}</div>
-    <div class="actions">
-      <button class="btn primary block" onclick="testNext()">${S.step<total-1?'ชุดถัดไป →':'ดูผลลัพธ์ →'}</button>
-    </div>`;
+/* ============================================================ SCORING ============================================================ */
+function scoreAnimal(){let t={bull:0,eagle:0,mouse:0,bear:0};Object.values(S.aAnimal).forEach(k=>t[k]!==undefined&&t[k]++);let top=Object.keys(t).reduce((a,b)=>t[a]>=t[b]?a:b);return {tally:t,top,animal:ANIMALS[top]};}
+function scoreMbti(){let c={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};Object.values(S.aMbti).forEach(k=>c[k]!==undefined&&c[k]++);let type=(c.E>=c.I?'E':'I')+(c.S>=c.N?'S':'N')+(c.T>=c.F?'T':'F')+(c.J>=c.P?'J':'P');return {counts:c,type,nick:MBTI_NICK[type]};}
+function scoreMind(){let sum=0,max=Q_MIND.length*5;Q_MIND.forEach((q,i)=>{let v=S.aMind[i]||0;sum+=q[1]?(6-v):v;});let pct=Math.round(sum/max*100);let label=pct>=75?"Growth Mindset ชัดเจน":pct>=55?"ค่อนไป Growth":pct>=40?"ผสมผสาน":"ค่อนไป Fixed";return {pct,label};}
+function scoreExin(){let ext=0,n=Q_EXIN.length;Q_EXIN.forEach((q,i)=>{let v=S.aExin[i]||3;ext+=q[1]?v:(6-v);});let pct=Math.round(ext/(n*5)*100);let label=pct>=65?"Extrovert":pct<=40?"Introvert":"Ambivert (กลางๆ)";return {pct,label};}
+function scoreWork(){let sum=0,max=Q_WORK.length*5;Q_WORK.forEach((q,i)=>sum+=(S.aWork[i]||0));let pct=Math.round(sum/max*100);let label=pct>=85?"สูงมาก":pct>=70?"สูง":pct>=55?"ปานกลาง":"ต้องพิจารณา";return {pct,label};}
+function overallScore(){const m=scoreMind().pct,w=scoreWork().pct;return Math.round(m*0.45+w*0.55);}
+function flags(){let fl=[];const k=S.knockout,f=S.form;
+  if(k.travel==="ไม่สะดวก")fl.push("เดินทางไม่สะดวก");
+  if(k.start==="มากกว่า 1 เดือน")fl.push("เริ่มงานช้า (>1 เดือน)");
+  if(scoreMind().pct<45)fl.push("Mindset ค่อนไป Fixed");
+  if(scoreWork().pct<55)fl.push("ค่านิยมการทำงานต่ำ");
+  let last=parseFloat(f.lastsal),exp=parseFloat(f.expsal);
+  if(last>0&&exp>0&&(exp-last)/last>0.4)fl.push("คาดหวังเงินเดือนกระโดด >40%");
+  return fl;}
+
+const ANIMAL_MORE = {
+  bull:{strong:"ตัดสินใจไว กล้าได้กล้าเสีย ผลักดันงานให้สำเร็จ ไม่กลัวปัญหา",watch:"บางครั้งใจร้อน อาจมองข้ามความรู้สึกคนอื่น ลองฟังทีมให้มากขึ้น",tip:"คุณเหมาะกับงานที่มีเป้าชัดและวัดผลได้ ปล่อยพลังลุยของคุณได้เต็มที่"},
+  eagle:{strong:"ความคิดสร้างสรรค์สูง สื่อสารเก่ง สร้างแรงบันดาลใจให้คนรอบข้าง",watch:"อาจเบื่อรายละเอียดหรืองานซ้ำๆ ลองฝึกทำสิ่งที่เริ่มไว้ให้จบ",tip:"คุณเปล่งประกายในงานไอเดีย การตลาด คอนเทนต์ และงานที่ได้พบผู้คน"},
+  mouse:{strong:"ละเอียด รอบคอบ เป็นระบบ งานของคุณเชื่อถือได้และแทบไม่มีพลาด",watch:"อาจคิดเยอะจนตัดสินใจช้า ลองตั้งเส้นตายให้ตัวเองบ้าง",tip:"คุณคือเสาหลักของงานที่ต้องการความแม่นยำ เช่น บัญชี เอกสาร วิเคราะห์"},
+  bear:{strong:"ใจเย็น อบอุ่น ทำงานสม่ำเสมอ เป็นที่พึ่งและประสานทีมได้ดี",watch:"เกรงใจคนจนบางทีไม่กล้าปฏิเสธ ลองกล้าบอกความต้องการของตัวเองบ้าง",tip:"คุณเหมาะกับงานบริการ ดูแลลูกค้า และงานที่ต้องอาศัยความอดทนต่อเนื่อง"}
+};
+const MBTI_BLURB = {
+  INTJ:"นักวางแผนระยะยาว มองภาพใหญ่ ทำงานอิสระได้ดี และมุ่งมั่นกับเป้าหมาย",INTP:"นักคิดเชิงตรรกะ ชอบวิเคราะห์ แก้ปัญหาซับซ้อน และเรียนรู้สิ่งใหม่",
+  ENTJ:"ผู้นำโดยธรรมชาติ ตัดสินใจเด็ดขาด จัดการงานและคนให้เดินไปข้างหน้า",ENTP:"ช่างคิดช่างเถียง เต็มไปด้วยไอเดีย ปรับตัวไว ชอบความท้าทายใหม่ๆ",
+  INFJ:"มีอุดมการณ์ เข้าใจคนลึก ทำงานเพื่อความหมายและช่วยเหลือผู้อื่น",INFP:"จิตใจดี ยึดคุณค่า มีความคิดสร้างสรรค์ และจริงใจกับสิ่งที่ทำ",
+  ENFJ:"ผู้นำที่ใส่ใจคน สร้างแรงบันดาลใจ ดึงศักยภาพทีมออกมาได้",ENFP:"พลังบวกสูง ช่างสื่อสาร มองโลกในแง่ดี และเชื่อมโยงผู้คนได้เก่ง",
+  ISTJ:"น่าเชื่อถือ มีวินัย ทำตามขั้นตอนเป๊ะ รับผิดชอบงานจนจบ",ISFJ:"ใส่ใจ ดูแลคนรอบข้าง ทำงานเบื้องหลังอย่างทุ่มเทและสม่ำเสมอ",
+  ESTJ:"ผู้จัดการตัวจริง เป็นระบบ เด็ดขาด ทำให้ทุกอย่างเดินตามแผน",ESFJ:"อบอุ่น เข้าสังคมเก่ง ดูแลทีมและลูกค้าได้ดี ใส่ใจรายละเอียดของคน",
+  ISTP:"มือแก้ปัญหาเฉพาะหน้า ลงมือทำ เรียนรู้จากการปฏิบัติจริง",ISFP:"อ่อนโยน มีรสนิยม ทำงานด้วยใจ และยืดหยุ่นกับสถานการณ์",
+  ESTP:"ลงมือไว กล้าเสี่ยง คล่องแคล่ว เก่งในสถานการณ์ที่ต้องตัดสินใจเร็ว",ESFP:"สดใส มีชีวิตชีวา สร้างบรรยากาศดี และทำงานกับผู้คนได้สนุก"
+};
+function bandText(kind,pct){
+  if(kind==="mind"){if(pct>=75)return "คุณมองว่าความสามารถพัฒนาได้ ชอบเรียนรู้และรับมือความท้าทายได้ดี — เป็นจุดแข็งที่นายจ้างมองหา";if(pct>=55)return "คุณค่อนข้างเปิดรับการพัฒนาตัวเอง ลองท้าทายตัวเองกับสิ่งใหม่ให้บ่อยขึ้นจะยิ่งเติบโต";if(pct>=40)return "คุณมีทั้งมุม Growth และ Fixed ผสมกัน ลองมองความผิดพลาดเป็นบทเรียนมากขึ้น";return "บางครั้งคุณอาจกลัวความผิดพลาดหรือเลี่ยงงานยาก ลองเริ่มจากสิ่งเล็กๆ ที่ท้าทายทีละนิด";}
+  if(kind==="exin"){if(pct>=65)return "คุณได้พลังจากการพบปะผู้คน เหมาะกับงานที่ได้สื่อสารและทำงานเป็นทีม";if(pct<=40)return "คุณได้พลังจากการมีสมาธิอยู่กับตัวเอง เหมาะกับงานที่ต้องโฟกัสและคิดลึก";return "คุณปรับตัวได้ทั้งงานเดี่ยวและงานกลุ่ม — ความยืดหยุ่นนี้เป็นข้อได้เปรียบ";}
+  if(kind==="work"){if(pct>=85)return "คุณให้คุณค่ากับความรับผิดชอบและความซื่อสัตย์สูงมาก เป็นคนที่ทีมไว้ใจได้";if(pct>=70)return "คุณมีความรับผิดชอบดี ทำงานได้น่าเชื่อถือ";if(pct>=55)return "คุณมีพื้นฐานความรับผิดชอบ ลองยกระดับความใส่ใจในงานขึ้นอีกนิด";return "ลองทบทวนเรื่องความรับผิดชอบและความตรงต่อเวลา ซึ่งเป็นสิ่งสำคัญในการทำงาน";}
+  return "";
 }
-function renderSection(key){
-  if(key==='animal') return ANIMAL_Q.map((q,i)=>`
-    <div class="q" style="margin-bottom:26px">
-      <div class="num">ข้อ ${i+1}</div><div class="txt">${q.t}</div>
-      ${q.o.map(o=>`<div class="opt ${S.ans.animal[i]===o.a?'sel':''}" onclick="pick('animal',${i},'${o.a}')">
-        <div class="mk"></div><div>${o.t}</div></div>`).join('')}
-    </div>`).join('');
-  if(key==='mbti') return MBTI_Q.map((q,i)=>`
-    <div class="q" style="margin-bottom:24px">
-      <div class="num">ข้อ ${i+1}</div>
-      <div class="opt ${S.ans.mbti[i]===q.axis[0]?'sel':''}" onclick="pick('mbti',${i},'${q.axis[0]}')"><div class="mk"></div><div>${q.a}</div></div>
-      <div class="opt ${S.ans.mbti[i]===q.axis[1]?'sel':''}" onclick="pick('mbti',${i},'${q.axis[1]}')"><div class="mk"></div><div>${q.b}</div></div>
-    </div>`).join('');
-  if(key==='mindset') return MINDSET_Q.map((q,i)=>likertBlock('mindset',i,q.t)).join('');
-  if(key==='ei') return EI_Q.map((q,i)=>likertBlock('ei',i,q.t)).join('');
-}
-function likertBlock(cat,i,txt){
-  return `<div class="q" style="margin-bottom:22px">
-    <div class="num">ข้อ ${i+1}</div><div class="txt" style="font-size:16px">${txt}</div>
-    <div class="likert">
-      ${LIKERT.map((l,v)=>`<div class="lk ${S.ans[cat][i]===v+1?'sel':''}" onclick="pick('${cat}',${i},${v+1})">
-        <span class="big">${v+1}</span>${l}</div>`).join('')}
-    </div></div>`;
-}
-function pick(cat,i,val){S.ans[cat][i]=val; render();}
-function sectionComplete(key){
-  if(key==='animal') return Object.keys(S.ans.animal).length===ANIMAL_Q.length;
-  if(key==='mbti')   return Object.keys(S.ans.mbti).length===MBTI_Q.length;
-  if(key==='mindset')return Object.keys(S.ans.mindset).length===MINDSET_Q.length;
-  if(key==='ei')     return Object.keys(S.ans.ei).length===EI_Q.length;
-}
-function testNext(){
-  const sec=TEST_SECTIONS[S.step];
-  if(!sectionComplete(sec.key)){alert('กรุณาตอบให้ครบทุกข้อก่อนไปต่อ');return;}
-  if(S.step<TEST_SECTIONS.length-1){S.step++; window.scrollTo(0,0); render();}
-  else go('result');
-}
-function testBack(){
-  if(S.step>0){S.step--; window.scrollTo(0,0); render();}
-  else go('form');
+/* ---------- 8. RESULT ---------- */
+function scrResult(){
+  const an=scoreAnimal(),mb=scoreMbti(),mi=scoreMind(),ex=scoreExin(),wk=scoreWork();
+  const animalBars=Object.keys(an.tally).map(k=>{let a=ANIMALS[k],pc=Math.round(an.tally[k]/Q_ANIMAL.length*100);return `<div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:.85rem"><span>${a.emoji} ${a.name}</span><span class="muted">${an.tally[k]}/${Q_ANIMAL.length}</span></div><div class="bar"><i style="width:${pc}%;background:${a.color}"></i></div></div>`;}).join("");
+  const am=ANIMAL_MORE[an.top];
+  return `<div class="card">
+    <div class="res-hero"><div class="res-emoji">${an.animal.emoji}</div><h1>คุณคือ "${an.animal.name}"</h1>
+      <div class="badge" style="background:${an.animal.color}22;color:${an.animal.color}">${an.animal.title}</div>
+      <p class="muted" style="max-width:520px;margin:12px auto">${an.animal.desc}</p></div>
+    <div class="capnote">📸 <b>สำคัญ:</b> เมื่ออ่านผลเสร็จ กรุณา <b>แคปหน้าจอนี้</b> แล้วส่งให้ทีม HR ทาง <b>LINE</b> เพื่อใช้ประกอบการพิจารณา จากนั้นกดปุ่ม "ส่งใบสมัคร" ด้านล่าง</div>
+    <div class="restile"><h3>🐂 สัตว์ 4 ทิศ — ${an.animal.name}</h3>${animalBars}
+      <p style="margin-top:10px"><b>จุดแข็งของคุณ:</b> ${am.strong}</p><p><b>สิ่งที่ควรระวัง:</b> ${am.watch}</p><p class="muted">💡 ${am.tip}</p></div>
+    <div class="restile"><h3>🧩 MBTI: ${mb.type} <span class="tag">${mb.nick}</span></h3><p>${MBTI_BLURB[mb.type]||''}</p><p class="muted">${mb.type.split('').map(l=>MBTI_DESC[l]).join(' · ')}</p></div>
+    <div class="restile"><h3>🌱 Mindset <span class="tag">${mi.label}</span></h3><div class="bar"><i style="width:${mi.pct}%;background:linear-gradient(90deg,#10b981,#3b6cff)"></i></div><p class="muted" style="margin:4px 0 8px">${mi.pct}% ไปทาง Growth Mindset</p><p>${bandText('mind',mi.pct)}</p></div>
+    <div class="restile"><h3>🎭 บุคลิก <span class="tag">${ex.label}</span></h3><div class="bar"><i style="width:${ex.pct}%;background:linear-gradient(90deg,#7c3aed,#ef4444)"></i></div><div class="lkrow"><span>Introvert</span><span>Extrovert</span></div><p style="margin-top:8px">${bandText('exin',ex.pct)}</p></div>
+    <div class="restile"><h3>⚖️ ค่านิยมการทำงาน <span class="tag">${wk.label}</span></h3><div class="bar"><i style="width:${wk.pct}%;background:linear-gradient(90deg,#f59e0b,#10b981)"></i></div><p class="muted" style="margin:4px 0 8px">${wk.pct}%</p><p>${bandText('work',wk.pct)}</p></div>
+    <div class="capnote" style="text-align:center">อย่าลืม 📸 แคปหน้าจอผลลัพธ์นี้ ส่งไลน์ HR ก่อนกดส่งใบสมัครนะครับ</div>
+    <div id="saveBox"></div>
+    <div class="navbtns"><button class="btn sec" onclick="prev()">← ย้อนกลับ</button><button class="btn" id="submitBtn">✓ ส่งใบสมัคร</button></div></div>`;
 }
 
-/* ---------- ผลลัพธ์ ---------- */
-function renderResult(){
-  const an=scoreAnimal(), A=ANIMALS[an.primary];
-  const mb=scoreMBTI(), MT=mbtiInfo(mb), md=scoreMindset(), ei=scoreEI();
-  const fit=computeFit(S.position);
-  app().innerHTML=`
-    <div class="progress">
-      <div class="lbl"><span>ขั้นที่ 3 จาก 3 · ผลลัพธ์</span><span>100%</span></div>
-      <div class="bar"><div class="fill" style="width:100%"></div></div>
-    </div>
-    <div class="card">
-      <div class="result-hero">
-        <div class="animal-badge" style="background:${A.color}">${A.emoji}</div>
-        <h2>คุณคือสาย “${A.name}”</h2>
-        <p class="mini" style="margin:2px 0 0">${A.disc}</p>
-        <p class="sub" style="margin:8px 0 0">${A.desc}</p>
-        <div class="chips">
-          <span class="chip">MBTI: ${mb}</span>
-          <span class="chip">${md.label}</span>
-          <span class="chip">${ei.label}</span>
-        </div>
-      </div>
-      <div class="res-grid">
-        <div class="res-box"><div class="k">ความเหมาะกับตำแหน่งนี้</div>
-          <div class="v" style="color:${fitColor(fit)}">${fit}%</div>
-          <div class="fitbar"><div style="width:${fit}%;background:${fitColor(fit)}"></div></div>
-          <div class="mini" style="margin-top:6px">${S.position.title} · ${S.company.name}</div>
-        </div>
-        <div class="res-box"><div class="k">Growth Mindset</div>
-          <div class="v">${md.pct}%</div>
-          <div class="fitbar"><div style="width:${md.pct}%;background:var(--brand)"></div></div>
-          <div class="mini" style="margin-top:6px">Extrovert ${ei.pct}%</div>
-        </div>
-      </div>
-
-      <div class="section" style="margin-top:22px">
-        <div class="label">จุดแข็งของคุณ (สาย ${A.name})</div>
-        <div class="pill-row" style="margin-top:8px">${A.traits.map(t=>`<span class="chip">${t}</span>`).join('')}</div>
-        <p class="mini" style="margin-top:10px">💼 เหมาะกับงาน: ${A.roles.join(' · ')}</p>
-        <p class="mini" style="margin-top:4px">⚠️ จุดที่ควรระวัง: ${A.watch}</p>
-      </div>
-
-      <div class="section" style="margin-top:18px;border-top:1px solid var(--line);padding-top:18px">
-        <div class="label">บุคลิกภาพ MBTI</div>
-        <div style="font-size:18px;font-weight:800;margin-top:6px">${mb} — ${MT.name}</div>
-        <p class="sub" style="margin:4px 0 0">${MT.desc}</p>
-        ${MT.roles?`<p class="mini" style="margin-top:8px">💼 สายงานที่มักโดดเด่น: ${MT.roles}</p>`:''}
-      </div>
-    </div>
-    <div class="actions">
-      <button class="btn ghost" onclick="go('test')">← ทบทวนคำตอบ</button>
-      <button class="btn primary" style="flex:1" onclick="finalSubmit()">ส่งใบสมัคร ✓</button>
-    </div>`;
+/* ============================================================ BIND ============================================================ */
+function bind(screen){
+  if(screen==="company"){document.querySelectorAll('.co').forEach(el=>el.onclick=()=>{S.company=el.dataset.co;if(S.company==='other'){let v=prompt("ระบุชื่อบริษัท/หน่วยงานที่สมัคร:");S.companyOther=v||"";if(v===null)return;}next();});}
+  if(screen==="form"){document.getElementById('formNext').onclick=()=>{captureForm();let miss=[];
+    if(!S.form.name)miss.push("ชื่อ-นามสกุล");if(!S.form.phone)miss.push("เบอร์โทร");if(!S.form.pos)miss.push("ตำแหน่งที่สมัคร");
+    if(!S.form.expsal)miss.push("เงินเดือนคาดหวัง");if(!S.knockout.start)miss.push("เริ่มงานได้เมื่อไหร่");if(!S.knockout.travel)miss.push("การเดินทาง");
+    if(!S.consent.pdpa)miss.push("ยินยอม PDPA");if(!S.consent.truth)miss.push("รับรองข้อมูลจริง");
+    if(miss.length){alert("กรุณากรอก/ติ๊ก: "+miss.join(", "));return;}next();};}
+  if(screen==="t_animal"){document.querySelectorAll('[data-ani]').forEach(el=>el.onclick=()=>{let i=el.dataset.ani;S.aAnimal[i]=el.dataset.k;document.querySelectorAll(`[data-ani="${i}"]`).forEach(x=>x.classList.remove('sel'));el.classList.add('sel');});
+    document.getElementById('aniNext').onclick=()=>{if(Object.keys(S.aAnimal).length<Q_ANIMAL.length){alert("กรุณาตอบให้ครบทุกข้อ ("+Object.keys(S.aAnimal).length+"/"+Q_ANIMAL.length+")");return;}next();};}
+  if(screen==="t_mbti"){document.querySelectorAll('[data-mb]').forEach(el=>el.onclick=()=>{let i=el.dataset.mb;S.aMbti[i]=el.dataset.k;document.querySelectorAll(`[data-mb="${i}"]`).forEach(x=>x.classList.remove('sel'));el.classList.add('sel');});
+    document.getElementById('mbNext').onclick=()=>{if(Object.keys(S.aMbti).length<Q_MBTI.length){alert("กรุณาตอบให้ครบทุกข้อ ("+Object.keys(S.aMbti).length+"/"+Q_MBTI.length+")");return;}next();};}
+  if(["t_mind","t_exin","t_work"].includes(screen)){document.querySelectorAll('[data-lk]').forEach(el=>el.onclick=()=>{let key=el.dataset.lk,i=el.dataset.i,v=+el.dataset.v;S[key][i]=v;el.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');});
+    document.getElementById('lkNext').onclick=()=>{let map={t_mind:[Q_MIND,'aMind'],t_exin:[Q_EXIN,'aExin'],t_work:[Q_WORK,'aWork']};let [items,key]=map[screen];if(Object.keys(S[key]).length<items.length){alert("กรุณาตอบให้ครบทุกข้อ ("+Object.keys(S[key]).length+"/"+items.length+")");return;}next();};}
+  if(screen==="result"){document.getElementById('submitBtn').onclick=submit;}
 }
+
+/* ============================================================ SUBMIT — Supabase ============================================================ */
 function buildRecord(){
-  const an=scoreAnimal(), mb=scoreMBTI(), md=scoreMindset(), ei=scoreEI();
+  const an=scoreAnimal(),mb=scoreMbti(),mi=scoreMind(),ex=scoreExin(),wk=scoreWork();
+  const co=COMPANIES.find(c=>c.id===S.company),f=S.form;
+  const workStr=S.work.filter(w=>w.company||w.position).map(w=>`${w.period||'-'} | ${w.company||'-'} | ${w.position||'-'} | ${w.salary?(+w.salary).toLocaleString()+'฿':'-'} | ออก: ${w.reason||'-'}`).join("\n");
+  const eduStr=S.edu.filter(e=>e.school||e.level).map(e=>`${e.level||'-'} | ${e.school||'-'} | ${e.major||'-'} | จบ ${e.year||'-'} | GPA ${e.gpa||'-'}`).join("\n");
   return {
-    id:'A'+Date.now(),
-    ts:new Date().toISOString(),
-    company:S.company.name, companyId:S.company.id,
-    position:S.position.title, positionId:S.position.id,
-    ...S.form,
-    animal:ANIMALS[an.primary].name, animalKey:an.primary,
-    mbti:mb, mindset:md.label, mindsetPct:md.pct,
-    social:ei.label, socialPct:ei.pct,
-    fit:computeFit(S.position),
+    id:"APP"+Date.now(), ts:new Date().toISOString(),
+    company:S.company==='other'?(S.companyOther||'อื่นๆ'):co.name,
+    name:f.name,nick:f.nick,phone:f.phone,contact:f.contact,birth:f.birth,age:f.age,
+    addr:[f.addr,f.district,f.province].filter(Boolean).join(" "),
+    emergency:[f.emgName,f.emgPhone].filter(Boolean).join(" / "),
+    pos:f.pos,source:f.source,education:eduStr,workHistory:workStr,
+    lastSalary:f.lastsal,expectedSalary:f.expsal,liveArea:f.liveArea,
+    commute:(f.commute||'')+(f.commuteOther?` (${f.commuteOther})`:''),
+    startAvail:S.knockout.start,travel:S.knockout.travel,fulltime:S.knockout.fulltime,
+    skills:Object.assign({},S.skills), aiTools:f.aiTools,aiOpinion:f.aiOpinion,intro:f.intro,
+    animal:an.animal.name,animalKey:an.top,mbti:mb.type,mbtiNick:mb.nick,
+    mindPct:mi.pct,mindLabel:mi.label,exinPct:ex.pct,exinLabel:ex.label,workPct:wk.pct,workLabel:wk.label,
+    overall:overallScore(),flags:flags().join(" | "),
+    consentPdpa:!!S.consent.pdpa,consentTruth:!!S.consent.truth,
+    resumeName:f.resumeName||'',resumeData:f.resumeData||''
   };
 }
-async function finalSubmit(){
-  const rec=buildRecord();
+function recToRow(r){
+  return {id:r.id,created_at:r.ts,company:r.company,name:r.name,nick:r.nick,phone:r.phone,contact:r.contact,
+    birth:r.birth,age:r.age,addr:r.addr,emergency:r.emergency,position:r.pos,source:r.source,
+    education:r.education,work_history:r.workHistory,last_salary:r.lastSalary,expected_salary:r.expectedSalary,
+    live_area:r.liveArea,commute:r.commute,start_avail:r.startAvail,travel:r.travel,fulltime:r.fulltime,
+    skills:r.skills,ai_tools:r.aiTools,ai_opinion:r.aiOpinion,intro:r.intro,
+    animal:r.animal,animal_key:r.animalKey,mbti:r.mbti,mbti_nick:r.mbtiNick,
+    mind_pct:r.mindPct,mind_label:r.mindLabel,exin_pct:r.exinPct,exin_label:r.exinLabel,work_pct:r.workPct,work_label:r.workLabel,
+    overall:r.overall,flags:r.flags,consent_pdpa:r.consentPdpa,consent_truth:r.consentTruth,
+    resume_name:r.resumeName||null,resume_path:r.resumePath||null};
+}
+function rowToApp(r){
+  return {id:r.id,ts:r.created_at,company:r.company,name:r.name,nick:r.nick,phone:r.phone,contact:r.contact,
+    birth:r.birth,age:r.age,addr:r.addr,emergency:r.emergency,pos:r.position,source:r.source,
+    education:r.education,workHistory:r.work_history,lastSalary:r.last_salary,expectedSalary:r.expected_salary,
+    liveArea:r.live_area,commute:r.commute,startAvail:r.start_avail,travel:r.travel,fulltime:r.fulltime,
+    skills:r.skills||{},aiTools:r.ai_tools,aiOpinion:r.ai_opinion,intro:r.intro,
+    animal:r.animal,animalKey:r.animal_key,mbti:r.mbti,mbtiNick:r.mbti_nick,
+    mindPct:r.mind_pct,mindLabel:r.mind_label,exinPct:r.exin_pct,exinLabel:r.exin_label,workPct:r.work_pct,workLabel:r.work_label,
+    overall:r.overall,flags:r.flags,resumeName:r.resume_name,resumePath:r.resume_path};
+}
+function saveLocal(rec){let arr=JSON.parse(localStorage.getItem('recruit_apps')||'[]');let c=Object.assign({},rec);if(c.resumePath)delete c.resumeData;arr.push(c);localStorage.setItem('recruit_apps',JSON.stringify(arr));}
+async function submit(){
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent="กำลังส่ง...";
+  const rec=buildRecord();let box=document.getElementById('saveBox');
+  initSupa();let online=false;
   if(sb){
     try{
-      // 1) อัป Resume เข้า Storage (ถ้ามี)
-      if(rec.resumeData && rec.resumeName){
-        const blob=dataUrlToBlob(rec.resumeData);
-        if(blob){
-          const path=rec.id+'/'+rec.resumeName;
-          // ไม่ใช้ upsert — anon มีสิทธิ์ insert อย่างเดียว (upsert ต้องใช้สิทธิ์ update)
-          const {error:upErr}=await sb.storage.from('resumes').upload(path, blob, {contentType:blob.type});
-          if(!upErr) rec.resumePath=path; else console.warn('อัป Resume ไม่สำเร็จ:',upErr);
-        }
-      }
-      // 2) บันทึกใบสมัครลงตาราง
+      if(rec.resumeData&&rec.resumeName){const blob=dataUrlToBlob(rec.resumeData);if(blob){const path=rec.id+'/'+rec.resumeName;const {error:ue}=await sb.storage.from('resumes').upload(path,blob,{contentType:blob.type});if(!ue)rec.resumePath=path;}}
       const {error}=await sb.from('applications').insert(recToRow(rec));
-      if(error) throw error;
-      rec.saved=true;
-    }catch(e){ console.warn('บันทึกขึ้น Supabase ไม่สำเร็จ:',e);
-      alert('บันทึกออนไลน์ไม่สำเร็จ ระบบเก็บสำเนาในเครื่องไว้ให้แล้ว'); }
-  }
-  // สำเนาในเครื่อง: ถ้าอัปขึ้น Storage แล้ว ตัด base64 ทิ้งเพื่อประหยัดพื้นที่
-  const localRec=Object.assign({},rec);
-  if(rec.saved && rec.resumePath) delete localRec.resumeData;
-  const apps=loadApps(); apps.push(localRec); saveApps(apps);
-  go('done');
+      if(error)throw error;online=true;
+      box.innerHTML=`<div class="save-note save-ok">✓ ส่งใบสมัครเรียบร้อย — บันทึกลงระบบแล้ว</div>`;
+    }catch(e){console.warn('supabase submit failed',e);box.innerHTML=`<div class="save-note save-warn">บันทึกลงเครื่องแล้ว แต่ส่งขึ้นระบบไม่สำเร็จ (ลองใหม่ หรือแจ้ง HR)</div>`;}
+  }else{box.innerHTML=`<div class="save-note save-ok">✓ บันทึกใบสมัครเรียบร้อย (โหมดออฟไลน์ เก็บในเบราว์เซอร์นี้)</div>`;}
+  saveLocal(rec);
+  btn.textContent="✓ ส่งแล้ว ขอบคุณครับ";
+  setTimeout(()=>{root.innerHTML=topbar()+`<div class="card center"><div class="res-emoji">🎉</div><h1>ส่งเรียบร้อยแล้ว!</h1>
+    <p class="muted">ขอบคุณที่สนใจมาร่วมงานกับเรานะ เดี๋ยวทีม HR จะรีบดูใบสมัครของคุณ แล้วติดต่อกลับไป รอข่าวดีได้เลย 😊</p>
+    <div class="navbtns" style="justify-content:center"><button class="btn" onclick="resetAll()">กรอกใบสมัครคนต่อไป</button></div></div>`;},1400);
 }
-function renderDone(){
-  app().innerHTML=`
-    <div class="card" style="text-align:center;padding:44px 24px">
-      <div style="font-size:60px">🎉</div>
-      <h2 style="margin-top:10px">ส่งใบสมัครเรียบร้อย!</h2>
-      <p class="sub" style="margin-top:8px">ขอบคุณที่สนใจร่วมงานกับ ${S.company.name}<br>ทีม HR จะติดต่อกลับหากคุณผ่านการพิจารณา</p>
-      <button class="btn primary" style="margin-top:12px" onclick="resetAll()">สมัครตำแหน่งอื่น</button>
-    </div>`;
-}
-function resetAll(){
-  S.company=null;S.position=null;S.form={};S.ans={animal:{},mbti:{},mindset:{},ei:{}};S.step=0;
-  go('landing');
-}
+function resetAll(){S={step:0,company:null,companyOther:"",form:{},knockout:{},work:[{}],edu:[{}],skills:blankSkills(),consent:{},aAnimal:{},aMbti:{},aMind:{},aExin:{},aWork:{}};render();}
 
-/* ============================================================
-   HR DASHBOARD
-   ============================================================ */
-let HR_AUTH=false, HR_REMOTE=null, hrFilter={co:'',q:'',sort:'fit'};
-async function openHR(){
+/* ============================================================ HR DASHBOARD (Supabase Auth) ============================================================ */
+let hrAuthed=false, HR_DATA=null, hrFilter={co:"all",q:"",expand:null};
+async function hrEnsure(){
   initSupa();
   if(sb){
-    const {data:{session}} = await sb.auth.getSession();
-    if(session){ HR_AUTH=true; enterHR(); }
-    else { HR_AUTH=false; S.screen='hr'; window.scrollTo(0,0); renderHRLogin(); }
-    return;
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){ hrAuthed=false; return renderHRLogin(); }
+    hrAuthed=true;
+    if(HR_DATA===null){
+      try{const {data,error}=await sb.from('applications').select('*').order('created_at',{ascending:false});HR_DATA=error?[]:data.map(rowToApp);}
+      catch(e){HR_DATA=[];alert('ดึงข้อมูลไม่สำเร็จ: '+e.message);}
+    }
+    return renderHRDash(true);
   }
-  // โหมดออฟไลน์: รหัสผ่านง่าย ๆ
-  if(HR_AUTH){ enterHR(); return; }
-  const pw=prompt('รหัสผ่านสำหรับ HR (โหมดออฟไลน์):');
-  if(pw===null)return;
-  if(pw===cfg().hrPassword){ HR_AUTH=true; enterHR(); } else alert('รหัสผ่านไม่ถูกต้อง');
+  // offline
+  if(!hrAuthed) return renderHRLogin(true);
+  HR_DATA=JSON.parse(localStorage.getItem('recruit_apps')||'[]');
+  renderHRDash(false);
 }
-function renderHRLogin(){
-  app().innerHTML=`
-    <button class="back" onclick="go('landing')">← กลับหน้าแรก</button>
-    <div class="card" style="max-width:420px;margin:24px auto">
-      <h2>เข้าสู่ระบบ HR</h2>
-      <p class="sub">สำหรับเจ้าหน้าที่ที่ได้รับสิทธิ์เท่านั้น</p>
-      <div class="field"><label>อีเมล</label><input id="hrEmail" type="email" placeholder="hr@company.com"></div>
-      <div class="field"><label>รหัสผ่าน</label><input id="hrPass" type="password" onkeydown="if(event.key==='Enter')hrLogin()"></div>
-      <button class="btn primary block" onclick="hrLogin()">เข้าสู่ระบบ</button>
-      <div id="hrLoginMsg" class="hint" style="margin-top:10px"></div>
-      <div class="hint" style="margin-top:14px"><a href="#" onclick="openSettings();return false;">⚙️ ตั้งค่าการเชื่อมต่อ Supabase</a></div>
-    </div>`;
+function renderHRLogin(offline){
+  root.innerHTML=`<div class="topbar"><div class="logo"><span class="dot">🔒</span> HR Dashboard</div>
+    <button class="ghost" onclick="location.hash=''">← กลับหน้าสมัคร</button></div>
+    <div class="card" style="max-width:420px;margin:40px auto"><h2>เข้าระบบ HR</h2>
+    <p class="muted">${offline?'ใส่รหัสผ่าน (โหมดออฟไลน์)':'สำหรับเจ้าหน้าที่ที่ได้รับสิทธิ์เท่านั้น'}</p>
+    ${offline?'':`<label class="f">อีเมล</label><input id="hrEmail" type="email" placeholder="hr@company.com">`}
+    <label class="f">รหัสผ่าน</label><input id="hrpass" type="password" placeholder="รหัสผ่าน">
+    <div style="margin-top:14px"><button class="btn" id="hrlogin">เข้าสู่ระบบ</button></div>
+    <div id="hrmsg" class="hint" style="margin-top:10px"></div></div>`;
+  document.getElementById('hrpass').onkeydown=e=>{if(e.key==='Enter')document.getElementById('hrlogin').click();};
+  document.getElementById('hrlogin').onclick=async()=>{
+    const msg=document.getElementById('hrmsg');
+    if(offline){ if(document.getElementById('hrpass').value===cfg().HR_PASSCODE){hrAuthed=true;hrEnsure();}else msg.textContent="รหัสไม่ถูกต้อง"; return; }
+    const email=(document.getElementById('hrEmail').value||'').trim(),pass=document.getElementById('hrpass').value;
+    if(!email||!pass){msg.textContent="กรอกอีเมลและรหัสผ่าน";return;}
+    msg.textContent="กำลังเข้าสู่ระบบ...";
+    const {error}=await sb.auth.signInWithPassword({email,password:pass});
+    if(error){msg.textContent="❌ "+error.message;return;}
+    HR_DATA=null; hrEnsure();
+  };
 }
-async function hrLogin(){
-  const email=document.getElementById('hrEmail').value.trim();
-  const pass=document.getElementById('hrPass').value;
-  const msg=document.getElementById('hrLoginMsg');
-  if(!email||!pass){ msg.textContent='กรอกอีเมลและรหัสผ่าน'; return; }
-  msg.textContent='กำลังเข้าสู่ระบบ...';
-  const {error}=await sb.auth.signInWithPassword({email, password:pass});
-  if(error){ msg.textContent='❌ '+error.message; return; }
-  HR_AUTH=true; enterHR();
+async function hrLogout(){if(sb){try{await sb.auth.signOut();}catch(e){}}hrAuthed=false;HR_DATA=null;location.hash='';}
+async function hrRefresh(){HR_DATA=null;hrEnsure();}
+async function openResume(path){if(!sb||!path)return;const {data,error}=await sb.storage.from('resumes').createSignedUrl(path,120);if(error){alert('เปิดไฟล์ไม่ได้: '+error.message);return;}window.open(data.signedUrl,'_blank');}
+function renderHRDash(online){
+  let data=(HR_DATA||[]).slice();
+  let cos=[...new Set(data.map(d=>d.company))];
+  let filtered=data.filter(d=>{let okCo=hrFilter.co==="all"||d.company===hrFilter.co;let q=hrFilter.q.toLowerCase();let okQ=!q||(d.name||'').toLowerCase().includes(q)||(d.pos||'').toLowerCase().includes(q);return okCo&&okQ;});
+  let avg=filtered.length?Math.round(filtered.reduce((a,b)=>a+(b.overall||0),0)/filtered.length):0;
+  let flagged=filtered.filter(d=>d.flags).length;
+  let rows=filtered.length?filtered.map(d=>{let sc=d.overall||0,col=sc>=75?'var(--ok)':sc>=55?'var(--warn)':'var(--bad)';
+    let expand=hrFilter.expand===d.id?`<tr><td colspan="7"><div class="detail">${detailHTML(d)}</div></td></tr>`:"";
+    return `<tr class="rowclick" data-exp="${d.id}"><td><b>${esc(d.name||'-')}</b><br><small class="muted">${esc(d.pos||'')}</small></td>
+      <td>${esc(d.company||'')}</td><td>${esc(d.animal||'')}<br><small class="muted">${esc(d.mbti||'')}</small></td>
+      <td><span class="pill" style="background:${col}22;color:${col}">${sc}</span></td><td>${d.workPct||0}%</td>
+      <td>${d.flags?`<span class="flag">⚑ ${d.flags.split(' | ').length}</span>`:'<span class="muted">—</span>'}</td>
+      <td><small class="muted">${fmtDate(d.ts)}</small></td></tr>${expand}`;}).join(""):`<tr><td colspan="7"><div class="empty">ยังไม่มีใบสมัคร${hrFilter.q||hrFilter.co!=='all'?'ที่ตรงเงื่อนไข':''}</div></td></tr>`;
+  root.innerHTML=`<div class="topbar"><div class="logo"><span class="dot">📊</span> HR Dashboard</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${online?`<button class="ghost" onclick="hrRefresh()">🔄 ซิงก์</button>`:''}
+      <button class="ghost" onclick="exportCSV()">⬇ CSV</button>
+      ${online?`<button class="ghost" onclick="hrLogout()">ออกจากระบบ</button>`:`<button class="ghost" onclick="location.hash=''">หน้าสมัคร</button>`}</div></div>
+    <div class="stat"><div class="statc"><b>${data.length}</b><span class="muted">ผู้สมัครทั้งหมด</span></div>
+      <div class="statc"><b>${filtered.length}</b><span class="muted">แสดงอยู่</span></div>
+      <div class="statc"><b>${avg}</b><span class="muted">คะแนนเฉลี่ย</span></div>
+      <div class="statc"><b style="color:var(--bad)">${flagged}</b><span class="muted">มีธงเตือน</span></div></div>
+    <div class="card"><div class="toolbar">
+      <input id="hrq" placeholder="🔍 ค้นหาชื่อ/ตำแหน่ง" value="${esc(hrFilter.q)}" style="flex:1;min-width:180px">
+      <select id="hrco"><option value="all">ทุกบริษัท</option>${cos.map(c=>`<option ${hrFilter.co===c?'selected':''}>${esc(c)}</option>`).join("")}</select>
+      <span style="font-size:.8rem;color:${online?'var(--ok)':'var(--muted)'}">${online?'🟢 Supabase':'⚪ ในเครื่อง'}</span></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>ผู้สมัคร</th><th>บริษัท</th><th>บุคลิก</th><th>คะแนนรวม</th><th>ค่านิยม</th><th>ธง</th><th>วันที่</th></tr></thead>
+      <tbody>${rows}</tbody></table></div></div>`;
+  document.getElementById('hrq').oninput=e=>{hrFilter.q=e.target.value;renderHRDash(online);document.getElementById('hrq').focus();};
+  document.getElementById('hrco').onchange=e=>{hrFilter.co=e.target.value;renderHRDash(online);};
+  document.querySelectorAll('[data-exp]').forEach(r=>r.onclick=()=>{hrFilter.expand=hrFilter.expand===r.dataset.exp?null:r.dataset.exp;renderHRDash(online);});
 }
-async function hrLogout(){ if(sb){ try{await sb.auth.signOut();}catch(e){} } HR_AUTH=false; HR_REMOTE=null; go('landing'); }
-function enterHR(){ S.screen='hr'; window.scrollTo(0,0); if(sb) refreshHR(); else { HR_REMOTE=null; renderHR(); } }
-// ข้อมูลผู้สมัคร: จาก Supabase ถ้าเชื่อมต่อได้ ไม่งั้นใช้ในเครื่อง
-function hrData(){ return HR_REMOTE!==null ? HR_REMOTE : loadApps(); }
-async function refreshHR(){
-  if(!sb){ HR_REMOTE=null; renderHR(); return; }
-  try{
-    const {data,error}=await sb.from('applications').select('*').order('created_at',{ascending:false});
-    if(error) throw error;
-    HR_REMOTE=(data||[]).map(rowToApp);
-  }catch(e){ HR_REMOTE=null; alert('ดึงข้อมูลจาก Supabase ไม่ได้: '+e.message); }
-  renderHR();
+function detailHTML(d){
+  let fl=d.flags?`<div class="save-note save-warn" style="margin:0 0 12px">⚑ ธงเตือน: ${esc(d.flags)}</div>`:"";
+  const kv=[["ชื่อเล่น",d.nick],["เบอร์โทร",d.phone],["อีเมล/LINE",d.contact],["วันเกิด",d.birth],["อายุ",d.age?d.age+" ปี":""],
+    ["ที่อยู่",d.addr],["ผู้ติดต่อฉุกเฉิน",d.emergency],["รู้ข่าวจาก",d.source],
+    ["เงินเดือนล่าสุด",d.lastSalary?(+d.lastSalary).toLocaleString()+" ฿":""],["เงินเดือนคาดหวัง",d.expectedSalary?(+d.expectedSalary).toLocaleString()+" ฿":""],
+    ["พักแถว",d.liveArea],["เดินทางโดย",d.commute],["เริ่มงานได้",d.startAvail],["เดินทางสะดวก",d.travel],["เต็มเวลา",d.fulltime],
+    ["MBTI",d.mbti?d.mbti+" — "+(d.mbtiNick||""):""],["สัตว์ 4 ทิศ",d.animal],
+    ["Mindset",d.mindLabel?d.mindLabel+" ("+d.mindPct+"%)":""],["บุคลิก",d.exinLabel?d.exinLabel+" ("+d.exinPct+"%)":""],
+    ["ค่านิยมงาน",d.workLabel?d.workLabel+" ("+d.workPct+"%)":""],["คะแนนรวม",d.overall!=null?d.overall+"/100":""],
+    ["Resume/CV",d.resumePath?'__RESUME__':'']
+  ].filter(x=>x[1]).map(x=>`<div>${x[0]}</div><div>${x[1]==='__RESUME__'?`<a href="#" onclick="openResume('${esc(d.resumePath)}');return false;">📎 เปิดไฟล์</a>`:esc(String(x[1]))}</div>`).join("");
+  let skHtml="";let sk=d.skills||{};let parts=SKILLS.filter(s=>sk[s[1]]!=null&&sk[s[1]]!=="").map(s=>`${s[0]}: <b>${sk[s[1]]}</b>`);
+  if(parts.length)skHtml=`<div style="margin-top:14px"><div class="muted" style="font-size:.85rem">ทักษะ (0–10):</div><div style="margin-top:4px;font-size:.86rem">${parts.join(" · ")}</div></div>`;
+  const block=(t,v)=>v?`<div style="margin-top:14px"><div class="muted" style="font-size:.85rem">${t}:</div><pre class="wh">${esc(v)}</pre></div>`:'';
+  return `${fl}<div class="kv">${kv}</div>${block("ประวัติการศึกษา",d.education)}${block("ประวัติการทำงาน",d.workHistory)}${skHtml}${block("AI ที่ใช้/รู้จัก",d.aiTools)}${block("ความเห็นเรื่อง AI ช่วยงาน",d.aiOpinion)}${block("เขียนแนะนำตัว",d.intro)}`;
 }
-async function openResume(path){
-  if(!sb || !path) return;
-  const {data,error}=await sb.storage.from('resumes').createSignedUrl(path, 120);
-  if(error){ alert('เปิดไฟล์ไม่ได้: '+error.message); return; }
-  window.open(data.signedUrl,'_blank');
-}
-function renderHR(){
-  let apps=hrData().slice();
-  // filter
-  if(hrFilter.co) apps=apps.filter(a=>a.companyId===hrFilter.co);
-  if(hrFilter.q){const q=hrFilter.q.toLowerCase();
-    apps=apps.filter(a=>((a.name||'')+(a.position||'')+(a.email||'')+(a.phone||'')).toLowerCase().includes(q));}
-  // sort
-  apps.sort((x,y)=> hrFilter.sort==='fit'? (y.fit-x.fit) : (new Date(y.ts)-new Date(x.ts)));
-  const total=hrData().length;
-  const online=HR_REMOTE!==null;
-
-  app().innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-      <div><h1 style="margin:0">HR Dashboard</h1>
-        <p class="sub" style="margin:2px 0 0">ผู้สมัครทั้งหมด ${total} คน · ${online?'🟢 เชื่อมต่อ Supabase':'⚪ โหมดในเครื่อง'}</p></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        ${sb?`<button class="btn ghost" onclick="refreshHR()">🔄 ซิงก์</button>`:''}
-        <button class="btn ghost" onclick="openSettings()">⚙️ ตั้งค่า</button>
-        <button class="btn ghost" onclick="exportCSV()">CSV</button>
-        ${sb?`<button class="btn ghost" onclick="hrLogout()">ออกจากระบบ</button>`:`<button class="btn ghost" onclick="go('landing')">ออก</button>`}
-      </div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <div class="toolbar">
-        <input placeholder="🔍 ค้นหา ชื่อ / ตำแหน่ง / อีเมล" value="${hrFilter.q}" oninput="hrFilter.q=this.value;renderHR()">
-        <select onchange="hrFilter.co=this.value;renderHR()">
-          <option value="">ทุกบริษัท</option>
-          ${COMPANIES.map(c=>`<option value="${c.id}" ${hrFilter.co===c.id?'selected':''}>${c.name}</option>`).join('')}
-        </select>
-        <select onchange="hrFilter.sort=this.value;renderHR()">
-          <option value="fit" ${hrFilter.sort==='fit'?'selected':''}>เรียงตาม Fit สูงสุด</option>
-          <option value="new" ${hrFilter.sort==='new'?'selected':''}>เรียงตามล่าสุด</option>
-        </select>
-      </div>
-      ${apps.length? `<div style="overflow:auto"><table>
-        <thead><tr><th>ผู้สมัคร</th><th>ตำแหน่ง</th><th>สัตว์</th><th>MBTI</th><th>Fit</th><th>วันที่</th></tr></thead>
-        <tbody>
-          ${apps.map(a=>`<tr onclick='showDetail("${a.id}")'>
-            <td><b>${a.name||'-'}</b><div class="mini">${a.phone||''}</div></td>
-            <td>${a.position}<div class="mini">${a.company}</div></td>
-            <td>${animalEmoji(a.animalKey)} ${a.animal||''}</td>
-            <td>${a.mbti||''}</td>
-            <td><span class="fitpill" style="background:${fitColor(a.fit)}22;color:${fitColor(a.fit)}">${a.fit}%</span></td>
-            <td class="mini">${fmtDate(a.ts)}</td>
-          </tr>`).join('')}
-        </tbody></table></div>`
-      : `<div class="empty">ยังไม่มีใบสมัคร${hrFilter.q||hrFilter.co?'ที่ตรงเงื่อนไข':''}</div>`}
-    </div>`;
-}
-const animalEmoji=(k)=> (ANIMALS[k]?.emoji)||'';
-function fmtDate(ts){const d=new Date(ts);return d.toLocaleDateString('th-TH',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
-
-function showDetail(id){
-  const a=hrData().find(x=>x.id===id); if(!a)return;
-  document.getElementById('modalMount').innerHTML=`
-    <div class="overlay" onclick="if(event.target===this)closeModal()">
-      <div class="modal">
-        <button class="close" onclick="closeModal()">×</button>
-        <h2>${a.name}</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-          <span class="chip">${animalEmoji(a.animalKey)} ${a.animal}</span>
-          <span class="chip">MBTI ${a.mbti} · ${mbtiInfo(a.mbti).name}</span>
-          <span class="chip">${a.mindset}</span>
-          <span class="chip">${a.social}</span>
-          <span class="chip" style="background:${fitColor(a.fit)}22;color:${fitColor(a.fit)}">Fit ${a.fit}%</span>
-        </div>
-        <div class="kv">
-          <div class="k">ตำแหน่ง</div><div>${a.position} · ${a.company}</div>
-          <div class="k">เบอร์โทร</div><div>${a.phone||'-'}</div>
-          <div class="k">LINE ID</div><div>${a.line||'-'}</div>
-          <div class="k">Email</div><div>${a.email||'-'}</div>
-          <div class="k">วุฒิการศึกษา</div><div>${a.edu||'-'}</div>
-          <div class="k">เงินเดือนคาดหวัง</div><div>${a.salary||'-'}</div>
-          <div class="k">เริ่มงานได้</div><div>${a.start||'-'}</div>
-          <div class="k">Growth/Social</div><div>Growth ${a.mindsetPct}% · Extrovert ${a.socialPct}%</div>
-          <div class="k">รู้จักจาก</div><div>${a.source||'-'}</div>
-          <div class="k">Resume/CV</div><div>${a.resumePath?`<a href="#" onclick="openResume('${a.resumePath}');return false;">📎 เปิด Resume</a>`: a.resumeData?`<a href="${a.resumeData}" download="${a.resumeName}">📎 ${a.resumeName}</a>`:'-'}</div>
-        </div>
-        ${a.about?`<div style="margin-top:14px"><div class="k mini">แนะนำตัว</div><p style="margin-top:4px">${a.about}</p></div>`:''}
-        ${a.exp?`<div style="margin-top:12px"><div class="k mini">ประสบการณ์ทำงาน</div><p style="margin-top:4px">${a.exp}</p></div>`:''}
-        <div style="margin-top:20px;display:flex;gap:10px">
-          <a class="btn primary" href="tel:${a.phone}">โทรหา</a>
-          <a class="btn ghost" href="mailto:${a.email}">ส่งอีเมล</a>
-        </div>
-      </div>
-    </div>`;
-}
-function closeModal(){document.getElementById('modalMount').innerHTML='';}
-
-/* ---------- HR settings: เชื่อมต่อ Google Sheets ---------- */
-function openSettings(){
-  const c=cfg();
-  document.getElementById('modalMount').innerHTML=`
-    <div class="overlay" onclick="if(event.target===this)closeModal()">
-      <div class="modal">
-        <button class="close" onclick="closeModal()">×</button>
-        <h2>เชื่อมต่อ Supabase</h2>
-        <p class="sub" style="margin-bottom:16px">วาง Project URL และ anon key (ดู SUPABASE_SETUP.md) — เว้นว่าง = โหมดในเครื่อง</p>
-        <div class="field"><label>Project URL</label>
-          <input id="cfgUrl" value="${c.supaUrl||''}" placeholder="https://xxxx.supabase.co"></div>
-        <div class="field"><label>anon / public key</label>
-          <input id="cfgKey" value="${c.supaKey||''}" placeholder="eyJhbGciOi..."></div>
-        <div class="hint">🔒 anon key เป็นค่าสาธารณะ ปลอดภัยที่จะฝังในหน้าเว็บ (ข้อมูลถูกป้องกันด้วย RLS)</div>
-        <div style="display:flex;gap:10px;margin-top:12px">
-          <button class="btn primary" onclick="saveSettings()">บันทึก</button>
-          <button class="btn ghost" onclick="testConn()">ทดสอบการเชื่อมต่อ</button>
-        </div>
-        <div id="cfgMsg" class="hint" style="margin-top:12px"></div>
-      </div>
-    </div>`;
-}
-function saveSettings(){
-  const url=document.getElementById('cfgUrl').value.trim();
-  const key=document.getElementById('cfgKey').value.trim();
-  localStorage.setItem(CFG_KEY, JSON.stringify({supaUrl:url, supaKey:key}));
-  initSupa(); closeModal(); openHR();
-}
-async function testConn(){
-  const url=document.getElementById('cfgUrl').value.trim();
-  const key=document.getElementById('cfgKey').value.trim();
-  const msg=document.getElementById('cfgMsg');
-  if(!url||!key){msg.textContent='กรอก Project URL และ anon key ให้ครบ';return;}
-  if(!window.supabase){msg.textContent='ไลบรารี Supabase ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง';return;}
-  msg.textContent='กำลังทดสอบ...';
-  try{
-    const t=window.supabase.createClient(url,key);
-    const {data,error}=await t.from('positions').select('id').eq('active',true);
-    msg.textContent = error ? ('⚠️ '+error.message)
-      : ('✅ เชื่อมต่อสำเร็จ — พบ '+(data?data.length:0)+' ตำแหน่งที่เปิดรับ');
-  }catch(e){ msg.textContent='❌ เชื่อมต่อไม่ได้: '+e.message; }
-}
-
-/* ---------- โหลดบริษัท/ตำแหน่งจาก Supabase ตอนเปิดเว็บ ---------- */
-async function init(){
-  initSupa();
-  if(sb){
-    try{
-      const [cosRes,posRes] = await Promise.all([
-        sb.from('companies').select('*').eq('active',true).order('sort'),
-        sb.from('positions').select('*').eq('active',true).order('sort')
-      ]);
-      if(cosRes.data && cosRes.data.length)
-        COMPANIES = cosRes.data.map(c=>({id:c.id,name:c.name,tagline:c.tagline,color:c.color,icon:c.icon}));
-      if(posRes.data && posRes.data.length)
-        POSITIONS = posRes.data.map(rowToPosition);
-    }catch(e){ console.warn('โหลดข้อมูลจาก Supabase ไม่ได้ ใช้ค่าเริ่มต้นแทน:',e); }
-  }
-  render();
-}
-
 function exportCSV(){
-  const apps=hrData(); if(!apps.length){alert('ยังไม่มีข้อมูล');return;}
-  const cols=['ts','company','position','name','nick','phone','line','email','edu','salary','start','source','about','exp','animal','mbti','mindset','mindsetPct','social','socialPct','fit','resumeName'];
-  const head=cols.join(',');
-  const rows=apps.map(a=>cols.map(c=>`"${String(a[c]??'').replace(/"/g,'""')}"`).join(','));
-  const csv='﻿'+[head,...rows].join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement('a');
-  link.href=url; link.download='applications_'+new Date().toISOString().slice(0,10)+'.csv';
-  link.click(); URL.revokeObjectURL(url);
+  let data=(HR_DATA||[]);if(!data.length){alert("ไม่มีข้อมูล");return;}
+  let base=["ts","company","name","nick","phone","contact","birth","age","addr","emergency","pos","source","education","workHistory","lastSalary","expectedSalary","liveArea","commute","startAvail","travel","fulltime"];
+  let skCols=SKILLS.map(s=>"sk_"+s[1]);
+  let tail=["aiTools","aiOpinion","intro","animal","mbti","mbtiNick","mindPct","mindLabel","exinPct","exinLabel","workPct","workLabel","overall","flags"];
+  let cols=[...base,...skCols,...tail];
+  let head=cols.join(",");
+  let rows=data.map(d=>cols.map(c=>{let v;if(c.startsWith("sk_")){v=(d.skills||{})[c.slice(3)]??'';}else v=d[c]??'';return `"${String(v).replace(/"/g,'""')}"`;}).join(","));
+  let csv="﻿"+head+"\n"+rows.join("\n");
+  let blob=new Blob([csv],{type:"text/csv;charset=utf-8"});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download="applicants_"+new Date().toISOString().slice(0,10)+".csv";a.click();
 }
+/* ---------- utils ---------- */
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function fmtDate(iso){try{let d=new Date(iso);return d.toLocaleDateString('th-TH',{day:'2-digit',month:'short'})+" "+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
 
-/* ============================================================ */
-init();
+window.addEventListener('hashchange',()=>{HR_DATA=null;render();});
+initSupa();
+render();
 </script>
 </body>
 </html>
