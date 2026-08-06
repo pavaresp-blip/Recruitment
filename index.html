@@ -252,6 +252,18 @@ const Q_WORK = [
   "ฉันรักษาความซื่อสัตย์ แม้ไม่มีใครเห็น","ฉันพยายามทำงานให้ดีกว่ามาตรฐานที่ถูกคาดหวัง"
 ];
 const LIKERT = ["ไม่เห็นด้วยมาก","ไม่เห็นด้วย","กลางๆ","เห็นด้วย","เห็นด้วยมาก"];
+
+/* คำถามสัมภาษณ์เบื้องต้น (สำหรับ HR) — เช็ค mindset / ทัศนคติการทำงาน / การอยู่ร่วมกับเพื่อนร่วมงาน */
+const INTERVIEW_Q = [
+  {dim:"Mindset",  q:"เล่าถึงตอนที่คุณทำงานผิดพลาด แล้วคุณจัดการกับมันอย่างไร"},
+  {dim:"Mindset",  q:"ถ้าได้รับมอบหมายงานที่ไม่เคยทำมาก่อน คุณจะเริ่มต้นยังไง"},
+  {dim:"Coachable",q:"เวลาหัวหน้าให้ฟีดแบ็กเชิงลบหรือชี้จุดที่ต้องปรับ คุณรู้สึกและทำอย่างไร"},
+  {dim:"ทัศนคติ",  q:"อะไรคือแรงจูงใจที่ทำให้คุณอยากตื่นมาทำงานในแต่ละวัน"},
+  {dim:"เพื่อนร่วมงาน",q:"เวลามีความเห็นไม่ตรงกับเพื่อนร่วมงาน คุณรับมือและหาทางออกอย่างไร"},
+  {dim:"เพื่อนร่วมงาน",q:"เล่าถึงครั้งที่คุณช่วยเหลือเพื่อนร่วมงาน ทั้งที่ไม่ใช่หน้าที่ของคุณ"},
+  {dim:"ทัศนคติ",  q:"คุณคาดหวังอะไรจากหัวหน้าและเพื่อนร่วมงาน และคิดว่าตัวเองให้อะไรกับทีมได้บ้าง"},
+  {dim:"เป้าหมาย",q:"มองภาพตัวเองในอีก 1–2 ปีข้างหน้าไว้อย่างไร"}
+];
 const SKILLS = [
   ["พูด","th_speak"],["อ่าน","th_read"],["เขียน","th_write"],
   ["พูด","en_speak"],["อ่าน","en_read"],["เขียน","en_write"],
@@ -603,7 +615,8 @@ function rowToApp(r){
     skills:r.skills||{},aiTools:r.ai_tools,aiOpinion:r.ai_opinion,intro:r.intro,
     animal:r.animal,animalKey:r.animal_key,mbti:r.mbti,mbtiNick:r.mbti_nick,
     mindPct:r.mind_pct,mindLabel:r.mind_label,exinPct:r.exin_pct,exinLabel:r.exin_label,workPct:r.work_pct,workLabel:r.work_label,
-    overall:r.overall,flags:r.flags,resumeName:r.resume_name,resumePath:r.resume_path};
+    overall:r.overall,flags:r.flags,resumeName:r.resume_name,resumePath:r.resume_path,
+    interviewScores:r.interview_scores||{},interviewComment:r.interview_comment,interviewScore:r.interview_score,interviewAt:r.interview_at};
 }
 function saveLocal(rec){let arr=JSON.parse(localStorage.getItem('recruit_apps')||'[]');let c=Object.assign({},rec);if(c.resumePath)delete c.resumeData;arr.push(c);localStorage.setItem('recruit_apps',JSON.stringify(arr));}
 async function submit(){
@@ -677,7 +690,7 @@ function renderHRDash(online){
   let flagged=filtered.filter(d=>d.flags).length;
   let rows=filtered.length?filtered.map(d=>{let sc=d.overall||0,col=sc>=75?'var(--ok)':sc>=55?'var(--warn)':'var(--bad)';
     let expand=hrFilter.expand===d.id?`<tr><td colspan="7"><div class="detail">${detailHTML(d)}</div></td></tr>`:"";
-    return `<tr class="rowclick" data-exp="${d.id}"><td><b>${esc(d.name||'-')}</b><br><small class="muted">${esc(d.pos||'')}</small></td>
+    return `<tr class="rowclick" data-exp="${d.id}"><td><b>${esc(d.name||'-')}</b><br><small class="muted">${esc(d.pos||'')}</small>${d.interviewScore!=null?`<br><span class="tag" style="background:rgba(16,185,129,.12);color:#0a7f5c">🎤 สัมภาษณ์ ${d.interviewScore}/10</span>`:''}</td>
       <td>${esc(d.company||'')}</td><td>${esc(d.animal||'')}<br><small class="muted">${esc(d.mbti||'')}</small></td>
       <td><span class="pill" style="background:${col}22;color:${col}">${sc}</span></td><td>${d.workPct||0}%</td>
       <td>${d.flags?`<span class="flag">⚑ ${d.flags.split(' | ').length}</span>`:'<span class="muted">—</span>'}</td>
@@ -714,13 +727,56 @@ function detailHTML(d){
   let skHtml="";let sk=d.skills||{};let parts=SKILLS.filter(s=>sk[s[1]]!=null&&sk[s[1]]!=="").map(s=>`${s[0]}: <b>${sk[s[1]]}</b>`);
   if(parts.length)skHtml=`<div style="margin-top:14px"><div class="muted" style="font-size:.85rem">ทักษะ (0–10):</div><div style="margin-top:4px;font-size:.86rem">${parts.join(" · ")}</div></div>`;
   const block=(t,v)=>v?`<div style="margin-top:14px"><div class="muted" style="font-size:.85rem">${t}:</div><pre class="wh">${esc(v)}</pre></div>`:'';
-  return `${fl}<div class="kv">${kv}</div>${block("ประวัติการศึกษา",d.education)}${block("ประวัติการทำงาน",d.workHistory)}${skHtml}${block("AI ที่ใช้/รู้จัก",d.aiTools)}${block("ความเห็นเรื่อง AI ช่วยงาน",d.aiOpinion)}${block("เขียนแนะนำตัว",d.intro)}`;
+  return `${fl}<div class="kv">${kv}</div>${block("ประวัติการศึกษา",d.education)}${block("ประวัติการทำงาน",d.workHistory)}${skHtml}${block("AI ที่ใช้/รู้จัก",d.aiTools)}${block("ความเห็นเรื่อง AI ช่วยงาน",d.aiOpinion)}${block("เขียนแนะนำตัว",d.intro)}${interviewHTML(d)}`;
+}
+function interviewHTML(d){
+  const sc=d.interviewScores||{};
+  const rows=INTERVIEW_Q.map((item,i)=>`
+    <div style="margin:10px 0;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#fff">
+      <div style="font-size:.86rem"><span class="tag" style="margin-right:7px">${item.dim}</span>${item.q}</div>
+      <div style="margin-top:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="muted" style="font-size:.8rem">คะแนน:</span>
+        <select id="iv_q_${d.id}_${i}" style="width:auto;padding:7px 12px">
+          ${['','1','2','3','4','5'].map(v=>`<option value="${v}" ${String(sc[i]??'')===v?'selected':''}>${v||'–'}</option>`).join('')}
+        </select><span class="muted" style="font-size:.74rem">(1 = ต่ำ, 5 = ดีมาก)</span>
+      </div>
+    </div>`).join('');
+  return `<div class="sec-h" style="margin-top:22px">📋 บันทึกผลสัมภาษณ์ <span class="muted" style="font-size:.8rem;font-weight:400">(สำหรับ HR)</span></div>
+    <p class="muted" style="font-size:.83rem;margin-top:0">ใช้คำถามด้านล่างถามผู้สมัคร เพื่อประเมิน mindset · ทัศนคติการทำงาน · การอยู่ร่วมกับเพื่อนร่วมงาน แล้วให้คะแนนแต่ละข้อ</p>
+    ${rows}
+    <label class="f">คอมเมนต์ของผู้สัมภาษณ์</label>
+    <textarea id="iv_comment_${d.id}" style="min-height:90px" placeholder="สรุปความประทับใจ จุดเด่น ข้อกังวล คำแนะนำ ฯลฯ">${esc(d.interviewComment||'')}</textarea>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap">
+      <label class="f" style="margin:0">คะแนนรวมสัมภาษณ์</label>
+      <select id="iv_score_${d.id}" style="width:auto">
+        ${['','1','2','3','4','5','6','7','8','9','10'].map(v=>`<option value="${v}" ${String(d.interviewScore??'')===v?'selected':''}>${v||'–'}</option>`).join('')}
+      </select><span class="muted" style="font-size:.8rem">/ 10</span>
+      <button class="btn" style="padding:11px 22px" onclick="saveInterview('${d.id}')">💾 บันทึกผลสัมภาษณ์</button>
+      <span id="iv_msg_${d.id}" class="hint"></span>
+    </div>
+    ${d.interviewAt?`<div class="hint" style="margin-top:6px">🕒 บันทึกล่าสุด: ${fmtDate(d.interviewAt)}</div>`:''}`;
+}
+async function saveInterview(id){
+  const msg=document.getElementById('iv_msg_'+id);
+  if(!sb){msg.textContent='ต้องเชื่อมต่อ Supabase และล็อกอิน HR ก่อน';return;}
+  const scores={};
+  INTERVIEW_Q.forEach((item,i)=>{const el=document.getElementById('iv_q_'+id+'_'+i);if(el&&el.value)scores[i]=+el.value;});
+  const comment=document.getElementById('iv_comment_'+id).value;
+  const oe=document.getElementById('iv_score_'+id);
+  const overall=oe&&oe.value?+oe.value:null;
+  const at=new Date().toISOString();
+  msg.textContent='กำลังบันทึก...';
+  const {error}=await sb.from('applications').update({interview_scores:scores,interview_comment:comment,interview_score:overall,interview_at:at}).eq('id',id);
+  if(error){msg.textContent='❌ '+error.message;return;}
+  msg.textContent='✅ บันทึกแล้ว';
+  const rec=(HR_DATA||[]).find(x=>x.id===id);
+  if(rec){rec.interviewScores=scores;rec.interviewComment=comment;rec.interviewScore=overall;rec.interviewAt=at;}
 }
 function exportCSV(){
   let data=(HR_DATA||[]);if(!data.length){alert("ไม่มีข้อมูล");return;}
   let base=["ts","company","name","nick","phone","contact","birth","age","addr","emergency","pos","source","education","workHistory","lastSalary","expectedSalary","liveArea","commute","startAvail","travel","fulltime"];
   let skCols=SKILLS.map(s=>"sk_"+s[1]);
-  let tail=["aiTools","aiOpinion","intro","animal","mbti","mbtiNick","mindPct","mindLabel","exinPct","exinLabel","workPct","workLabel","overall","flags"];
+  let tail=["aiTools","aiOpinion","intro","animal","mbti","mbtiNick","mindPct","mindLabel","exinPct","exinLabel","workPct","workLabel","overall","flags","interviewScore","interviewComment"];
   let cols=[...base,...skCols,...tail];
   let head=cols.join(",");
   let rows=data.map(d=>cols.map(c=>{let v;if(c.startsWith("sk_")){v=(d.skills||{})[c.slice(3)]??'';}else v=d[c]??'';return `"${String(v).replace(/"/g,'""')}"`;}).join(","));
