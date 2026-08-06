@@ -148,6 +148,11 @@
   .skill>b{font-family:var(--disp);flex:0 0 28px;text-align:center;color:var(--brand);font-weight:700}
   .consent{display:flex;gap:11px;align-items:flex-start;margin:13px 0;font-size:.89rem;cursor:pointer;line-height:1.5}
   .consent input{width:19px;height:19px;flex:0 0 auto;margin-top:2px;accent-color:var(--brand)}
+  .ivres{padding:9px 16px;border-radius:11px;border:1.5px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;font-family:inherit;font-size:.88rem;font-weight:600;transition:.15s}
+  .ivres:hover{border-color:var(--line2)}
+  .ivres.sel[data-v="pass"]{background:rgba(16,185,129,.12);border-color:var(--ok);color:#0a7f5c}
+  .ivres.sel[data-v="fail"]{background:rgba(239,68,68,.1);border-color:var(--bad);color:#b91c1c}
+  .ivres.sel[data-v="pending"]{background:rgba(245,158,11,.12);border-color:var(--warn);color:#9a6a00}
   .pdpa-box{background:#f8faff;border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-size:.83rem;color:var(--muted);margin:10px 0;line-height:1.6}
   pre.wh{white-space:pre-wrap;font-family:var(--font);margin:5px 0 0;background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px;font-size:.86rem;line-height:1.6}
   .capnote{background:linear-gradient(135deg,rgba(59,108,255,.1),rgba(124,58,237,.08));border:1px solid rgba(59,108,255,.3);color:#2a3550;border-radius:16px;padding:15px 17px;margin:16px 0;font-size:.92rem;line-height:1.6}
@@ -616,8 +621,17 @@ function rowToApp(r){
     animal:r.animal,animalKey:r.animal_key,mbti:r.mbti,mbtiNick:r.mbti_nick,
     mindPct:r.mind_pct,mindLabel:r.mind_label,exinPct:r.exin_pct,exinLabel:r.exin_label,workPct:r.work_pct,workLabel:r.work_label,
     overall:r.overall,flags:r.flags,resumeName:r.resume_name,resumePath:r.resume_path,
-    interviewScores:r.interview_scores||{},interviewComment:r.interview_comment,interviewScore:r.interview_score,interviewAt:r.interview_at};
+    interviewScores:r.interview_scores||{},interviewComment:r.interview_comment,interviewScore:r.interview_score,interviewAt:r.interview_at,interviewResult:r.interview_result};
 }
+function ivBadge(d){
+  const s=d.interviewScore!=null?' '+d.interviewScore+'/10':'';
+  if(d.interviewResult==='pass') return `<br><span class="tag" style="background:rgba(16,185,129,.14);color:#0a7f5c">✅ ผ่าน${s}</span>`;
+  if(d.interviewResult==='fail') return `<br><span class="tag" style="background:rgba(239,68,68,.12);color:#b91c1c">❌ ไม่ผ่าน</span>`;
+  if(d.interviewResult==='pending') return `<br><span class="tag" style="background:rgba(245,158,11,.14);color:#9a6a00">⏳ รอพิจารณา${s}</span>`;
+  if(d.interviewScore!=null||d.interviewComment) return `<br><span class="tag" style="background:rgba(59,108,255,.1);color:var(--brand)">🎤 สัมภาษณ์แล้ว${s}</span>`;
+  return '';
+}
+function isInterviewed(d){ return !!(d.interviewResult||d.interviewScore!=null||d.interviewComment); }
 function saveLocal(rec){let arr=JSON.parse(localStorage.getItem('recruit_apps')||'[]');let c=Object.assign({},rec);if(c.resumePath)delete c.resumeData;arr.push(c);localStorage.setItem('recruit_apps',JSON.stringify(arr));}
 async function submit(){
   const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent="กำลังส่ง...";
@@ -640,7 +654,7 @@ async function submit(){
 function resetAll(){S={step:0,company:null,companyOther:"",form:{},knockout:{},work:[{}],edu:[{}],skills:blankSkills(),consent:{},aAnimal:{},aMbti:{},aMind:{},aExin:{},aWork:{}};render();}
 
 /* ============================================================ HR DASHBOARD (Supabase Auth) ============================================================ */
-let hrAuthed=false, HR_DATA=null, hrFilter={co:"all",q:"",expand:null};
+let hrAuthed=false, HR_DATA=null, hrFilter={co:"all",q:"",result:"all",expand:null};
 async function hrEnsure(){
   initSupa();
   if(sb){
@@ -685,12 +699,20 @@ async function openResume(path){if(!sb||!path)return;const {data,error}=await sb
 function renderHRDash(online){
   let data=(HR_DATA||[]).slice();
   let cos=[...new Set(data.map(d=>d.company))];
-  let filtered=data.filter(d=>{let okCo=hrFilter.co==="all"||d.company===hrFilter.co;let q=hrFilter.q.toLowerCase();let okQ=!q||(d.name||'').toLowerCase().includes(q)||(d.pos||'').toLowerCase().includes(q);return okCo&&okQ;});
+  let filtered=data.filter(d=>{
+    let okCo=hrFilter.co==="all"||d.company===hrFilter.co;
+    let q=hrFilter.q.toLowerCase();
+    let okQ=!q||(d.name||'').toLowerCase().includes(q)||(d.pos||'').toLowerCase().includes(q);
+    let okR = hrFilter.result==='all'
+      || (hrFilter.result==='none' ? !isInterviewed(d) : d.interviewResult===hrFilter.result);
+    return okCo&&okQ&&okR;});
   let avg=filtered.length?Math.round(filtered.reduce((a,b)=>a+(b.overall||0),0)/filtered.length):0;
   let flagged=filtered.filter(d=>d.flags).length;
+  let interviewed=data.filter(d=>isInterviewed(d)).length;
+  let passed=data.filter(d=>d.interviewResult==='pass').length;
   let rows=filtered.length?filtered.map(d=>{let sc=d.overall||0,col=sc>=75?'var(--ok)':sc>=55?'var(--warn)':'var(--bad)';
     let expand=hrFilter.expand===d.id?`<tr><td colspan="7"><div class="detail">${detailHTML(d)}</div></td></tr>`:"";
-    return `<tr class="rowclick" data-exp="${d.id}"><td><b>${esc(d.name||'-')}</b><br><small class="muted">${esc(d.pos||'')}</small>${d.interviewScore!=null?`<br><span class="tag" style="background:rgba(16,185,129,.12);color:#0a7f5c">🎤 สัมภาษณ์ ${d.interviewScore}/10</span>`:''}</td>
+    return `<tr class="rowclick" data-exp="${d.id}"><td><b>${esc(d.name||'-')}</b><br><small class="muted">${esc(d.pos||'')}</small>${ivBadge(d)}</td>
       <td>${esc(d.company||'')}</td><td>${esc(d.animal||'')}<br><small class="muted">${esc(d.mbti||'')}</small></td>
       <td><span class="pill" style="background:${col}22;color:${col}">${sc}</span></td><td>${d.workPct||0}%</td>
       <td>${d.flags?`<span class="flag">⚑ ${d.flags.split(' | ').length}</span>`:'<span class="muted">—</span>'}</td>
@@ -700,17 +722,26 @@ function renderHRDash(online){
       <button class="ghost" onclick="exportCSV()">⬇ CSV</button>
       ${online?`<button class="ghost" onclick="hrLogout()">ออกจากระบบ</button>`:`<button class="ghost" onclick="location.hash=''">หน้าสมัคร</button>`}</div></div>
     <div class="stat"><div class="statc"><b>${data.length}</b><span class="muted">ผู้สมัครทั้งหมด</span></div>
-      <div class="statc"><b>${filtered.length}</b><span class="muted">แสดงอยู่</span></div>
+      <div class="statc"><b style="color:var(--brand)">${interviewed}</b><span class="muted">สัมภาษณ์แล้ว</span></div>
+      <div class="statc"><b style="color:var(--ok)">${passed}</b><span class="muted">ผ่านสัมภาษณ์</span></div>
       <div class="statc"><b>${avg}</b><span class="muted">คะแนนเฉลี่ย</span></div>
       <div class="statc"><b style="color:var(--bad)">${flagged}</b><span class="muted">มีธงเตือน</span></div></div>
     <div class="card"><div class="toolbar">
       <input id="hrq" placeholder="🔍 ค้นหาชื่อ/ตำแหน่ง" value="${esc(hrFilter.q)}" style="flex:1;min-width:180px">
       <select id="hrco"><option value="all">ทุกบริษัท</option>${cos.map(c=>`<option ${hrFilter.co===c?'selected':''}>${esc(c)}</option>`).join("")}</select>
+      <select id="hrres">
+        <option value="all">สถานะทั้งหมด</option>
+        <option value="pass" ${hrFilter.result==='pass'?'selected':''}>✅ ผ่าน</option>
+        <option value="fail" ${hrFilter.result==='fail'?'selected':''}>❌ ไม่ผ่าน</option>
+        <option value="pending" ${hrFilter.result==='pending'?'selected':''}>⏳ รอพิจารณา</option>
+        <option value="none" ${hrFilter.result==='none'?'selected':''}>ยังไม่สัมภาษณ์</option>
+      </select>
       <span style="font-size:.8rem;color:${online?'var(--ok)':'var(--muted)'}">${online?'🟢 Supabase':'⚪ ในเครื่อง'}</span></div>
       <div style="overflow-x:auto"><table><thead><tr><th>ผู้สมัคร</th><th>บริษัท</th><th>บุคลิก</th><th>คะแนนรวม</th><th>ค่านิยม</th><th>ธง</th><th>วันที่</th></tr></thead>
       <tbody>${rows}</tbody></table></div></div>`;
   document.getElementById('hrq').oninput=e=>{hrFilter.q=e.target.value;renderHRDash(online);document.getElementById('hrq').focus();};
   document.getElementById('hrco').onchange=e=>{hrFilter.co=e.target.value;renderHRDash(online);};
+  document.getElementById('hrres').onchange=e=>{hrFilter.result=e.target.value;renderHRDash(online);};
   document.querySelectorAll('[data-exp]').forEach(r=>r.onclick=()=>{hrFilter.expand=hrFilter.expand===r.dataset.exp?null:r.dataset.exp;renderHRDash(online);});
 }
 function detailHTML(d){
@@ -746,6 +777,12 @@ function interviewHTML(d){
     ${rows}
     <label class="f">คอมเมนต์ของผู้สัมภาษณ์</label>
     <textarea id="iv_comment_${d.id}" style="min-height:90px" placeholder="สรุปความประทับใจ จุดเด่น ข้อกังวล คำแนะนำ ฯลฯ">${esc(d.interviewComment||'')}</textarea>
+    <label class="f">ผลการสัมภาษณ์ (ไว้ follow up)</label>
+    <div id="iv_result_${d.id}" data-val="${d.interviewResult||''}" style="display:flex;gap:9px;flex-wrap:wrap">
+      <button type="button" class="ivres ${d.interviewResult==='pass'?'sel':''}" data-v="pass" onclick="pickResult('${d.id}',this)">✅ ผ่าน</button>
+      <button type="button" class="ivres ${d.interviewResult==='fail'?'sel':''}" data-v="fail" onclick="pickResult('${d.id}',this)">❌ ไม่ผ่าน</button>
+      <button type="button" class="ivres ${d.interviewResult==='pending'?'sel':''}" data-v="pending" onclick="pickResult('${d.id}',this)">⏳ รอพิจารณา</button>
+    </div>
     <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap">
       <label class="f" style="margin:0">คะแนนรวมสัมภาษณ์</label>
       <select id="iv_score_${d.id}" style="width:auto">
@@ -756,6 +793,14 @@ function interviewHTML(d){
     </div>
     ${d.interviewAt?`<div class="hint" style="margin-top:6px">🕒 บันทึกล่าสุด: ${fmtDate(d.interviewAt)}</div>`:''}`;
 }
+function pickResult(id,btn){
+  const wrap=document.getElementById('iv_result_'+id);
+  const cur=wrap.dataset.val;
+  const v=btn.dataset.v;
+  const newv=cur===v?'':v; // กดซ้ำ = ยกเลิก
+  wrap.dataset.val=newv;
+  wrap.querySelectorAll('.ivres').forEach(b=>b.classList.toggle('sel', b.dataset.v===newv));
+}
 async function saveInterview(id){
   const msg=document.getElementById('iv_msg_'+id);
   if(!sb){msg.textContent='ต้องเชื่อมต่อ Supabase และล็อกอิน HR ก่อน';return;}
@@ -764,19 +809,21 @@ async function saveInterview(id){
   const comment=document.getElementById('iv_comment_'+id).value;
   const oe=document.getElementById('iv_score_'+id);
   const overall=oe&&oe.value?+oe.value:null;
+  const result=document.getElementById('iv_result_'+id).dataset.val||null;
   const at=new Date().toISOString();
   msg.textContent='กำลังบันทึก...';
-  const {error}=await sb.from('applications').update({interview_scores:scores,interview_comment:comment,interview_score:overall,interview_at:at}).eq('id',id);
+  const {error}=await sb.from('applications').update({interview_scores:scores,interview_comment:comment,interview_score:overall,interview_result:result,interview_at:at}).eq('id',id);
   if(error){msg.textContent='❌ '+error.message;return;}
   msg.textContent='✅ บันทึกแล้ว';
   const rec=(HR_DATA||[]).find(x=>x.id===id);
-  if(rec){rec.interviewScores=scores;rec.interviewComment=comment;rec.interviewScore=overall;rec.interviewAt=at;}
+  if(rec){rec.interviewScores=scores;rec.interviewComment=comment;rec.interviewScore=overall;rec.interviewResult=result;rec.interviewAt=at;}
+  setTimeout(()=>renderHRDash(HR_REMOTE!==null),700); // อัปเดต badge ในตาราง (ยังคงเปิดแถวเดิมไว้)
 }
 function exportCSV(){
   let data=(HR_DATA||[]);if(!data.length){alert("ไม่มีข้อมูล");return;}
   let base=["ts","company","name","nick","phone","contact","birth","age","addr","emergency","pos","source","education","workHistory","lastSalary","expectedSalary","liveArea","commute","startAvail","travel","fulltime"];
   let skCols=SKILLS.map(s=>"sk_"+s[1]);
-  let tail=["aiTools","aiOpinion","intro","animal","mbti","mbtiNick","mindPct","mindLabel","exinPct","exinLabel","workPct","workLabel","overall","flags","interviewScore","interviewComment"];
+  let tail=["aiTools","aiOpinion","intro","animal","mbti","mbtiNick","mindPct","mindLabel","exinPct","exinLabel","workPct","workLabel","overall","flags","interviewResult","interviewScore","interviewComment"];
   let cols=[...base,...skCols,...tail];
   let head=cols.join(",");
   let rows=data.map(d=>cols.map(c=>{let v;if(c.startsWith("sk_")){v=(d.skills||{})[c.slice(3)]??'';}else v=d[c]??'';return `"${String(v).replace(/"/g,'""')}"`;}).join(","));
