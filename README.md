@@ -1,3 +1,3 @@
 # Recruitment — Talent Match
 
-Trigger redeploy: animal scoring fix.
+Public repo. Deploy trigger 2.
